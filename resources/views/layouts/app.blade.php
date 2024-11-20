@@ -25,7 +25,12 @@
         }
 
         .form-group{
-            margin-bottom:10px;
+            margin-bottom:15px;
+        }
+
+        .auto-width{
+            width:1%;
+            white-space:nowrap;
         }
     </style>
     @yield('css')

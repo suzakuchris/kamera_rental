@@ -68,7 +68,7 @@ class ProductController extends Controller
         return view('master.form.product', $data);
     }
 
-    public function save(Request $req){
+    public function upsert(Request $req){
         dd($req);
     }
 
