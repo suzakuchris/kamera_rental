@@ -34,15 +34,28 @@ Add New Product
 <form method="POST" action="{{route('master.product.upsert')}}" onsubmit="pre_submit(event, this);">
     <fieldset class="border p-2">
         {{ csrf_field() }}
-        <input type="hidden" name="product_id">
+        <input type="hidden" name="product_id" @if(isset($product)) value="{{$product->product_id}}" @endif>
         <legend class="w-auto">Data Produk</legend>
+        <div class="row mx-0">
+            <div class="col-12">
+                @if(isset($errors) && count($errors->all()) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+            </div>
+        </div>
         <div class="row mx-0">
             <div class="col-12">
                 <div class="row mx-0">
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Produk</label>
-                            <input name="product_name" class="form-control" required placeholder="Masukan nama produk">
+                            <input name="product_name" class="form-control" required placeholder="Masukan nama produk" @if(old('product_name')) value="{{old('product_name')}}" @elseif(isset($product)) value="{{$product->product_name}}" @endif>
                         </div>
                     </div>
                     <div class="col-6">
@@ -51,7 +64,7 @@ Add New Product
                             <select name="product_type" class="form-control" required>
                                 <option value="" disabled selected>--Pilih Tipe Produk--</option>
                                 @foreach($types as $type)
-                                <option value="{{$type->product_type_id}}">{{$type->product_type_name}}</option>
+                                <option value="{{$type->product_type_id}}" @if(old('product_type') == $type->product_type_id || (isset($product) && $product->product_type == $type->product_type_id)) selected @endif>{{$type->product_type_name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -62,7 +75,7 @@ Add New Product
                             <select name="product_brand" class="form-control" required>
                                 <option value="" disabled selected>--Pilih Brand Produk--</option>
                                 @foreach($brands as $brand)
-                                <option value="{{$brand->product_brand_id}}">{{$brand->product_brand_name}}</option>
+                                <option value="{{$brand->product_brand_id}}" @if(old('product_brand') == $brand->product_brand_id || (isset($product) && $product->product_brand == $brand->product_brand_id)) selected @endif>{{$brand->product_brand_name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -70,13 +83,13 @@ Add New Product
                     <div class="col-12">
                         <div class="form-group">
                             <label>Spesifikasi</label>
-                            <textarea class="form-control" name="product_specification" rows="4"></textarea>
+                            <textarea class="form-control" name="product_specification" rows="4">@if(old('product_specification')) {{old('product_specification')}} @elseif(isset($product)) {{$product->product_specification}} @endif</textarea>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label>Deskripsi</label>
-                            <textarea class="form-control" name="product_description" rows="4"></textarea>
+                            <textarea class="form-control" name="product_description" rows="4">@if(old('product_description')) {{old('product_description')}} @elseif(isset($product)) {{$product->product_description}} @endif</textarea>
                         </div>
                     </div>
                     <div class="col-12">
@@ -89,14 +102,37 @@ Add New Product
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(isset($images) && count($images) > 0)
+                                    @foreach($images as $i)
+                                    <tr class="input-row">
+                                        <td></td>
+                                        <td>
+                                            <div class="image-wrapper">
+                                                <img style="width:100px;height:auto;max-height:200px;" src="{{asset($i->image_path.$i->image_name)}}">
+                                            </div>
+                                            <div class="input-wrapper">
+                                                <input type="hidden" name="product_images_keep[]" value="{{$i->image_id}}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" onclick="move_up(this);" class="btn btn-primary btn-up"><i class="bi bi-arrow-up"></i></button>
+                                                <button type="button" onclick="move_down(this);" class="btn btn-primary btn-down"><i class="bi bi-arrow-down"></i></button>
+                                                <button type="button" onclick="remove(this);" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
                                 <tr class="no-data">
                                     <td colspan="3">Tambahkan gambar..</td>
                                 </tr>
+                                @endif
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td class="input-wrapper" colspan="2">
-                                        <input type="file" class="form-control imageinput">
+                                        <input accept="image/png, image/gif, image/jpeg" type="file" class="form-control imageinput">
                                         <input type="text" class="d-none base64input">
                                     </td>
                                     <td>
@@ -171,12 +207,17 @@ Add New Product
         var input = row.find('.imageinput');
         var input_b64 = row.find('.base64input');
 
+        if(input_b64.val() == ""){
+            Swal.fire("Silahkan pilih foto dulu");
+            return;
+        }
+
         var _row = $("#factory-table tr.input-row").clone();
         var image = `<img style="width:100px;height:auto;max-height:200px;" src="`+input_b64.val()+`">`;
         _row.find(".image-wrapper").html(image);
         // input.addClass('d-none').appendTo(_row.find(".input-wrapper"));
         input.val('');
-        input_b64.attr('name', 'image_add[]').appendTo(_row.find(".input-wrapper"));
+        input_b64.attr('name', 'product_images_add[]').appendTo(_row.find(".input-wrapper"));
 
         body.find('.no-data').remove();
         body.append(_row);

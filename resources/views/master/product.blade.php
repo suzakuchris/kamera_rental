@@ -135,8 +135,8 @@
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-outline-primary d-flex align-items-center" onclick="edit_data(`+y.product_type_id+`)"><i class="bi bi-pencil me-2"></i>Edit</button>
-                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.product_type_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" onclick="edit_data(`+y.product_id+`)"><i class="bi bi-pencil me-2"></i>Edit</button>
+                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.product_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -172,10 +172,11 @@
                     headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
                     dataType: 'JSON',
                     data    : {
-                        'type_id':id,
+                        'product_id':id,
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");
+                        search_process();
                     },
                     error     : function(xhr) {
                         console.log(xhr);
