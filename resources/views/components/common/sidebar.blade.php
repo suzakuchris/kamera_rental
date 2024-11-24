@@ -44,6 +44,10 @@
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Product</span>
                       </a>
+                      <a class="py-2 my-1" href="{{route('master.product_bundle')}}">
+                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <span class="text nav-text">Bundle</span>
+                      </a>
                       <a class="py-2 my-1" href="{{route('master.users')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">User</span>

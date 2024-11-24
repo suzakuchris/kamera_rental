@@ -57,7 +57,7 @@ class ProductController extends Controller
         $data['types'] = Type::where('fg_aktif', 1)->get();
         $data['brands'] = Brand::where('fg_aktif', 1)->get();
         $data['product'] = Product::find($req->product_id);
-        $data['images'] = Product_Image::where('product_id', $req->product_id)->get();
+        $data['images'] = Product_Image::where('product_id', $req->product_id)->orderBy('image_sort')->get();
         return view('master.form.product', $data);
     }
 
@@ -66,7 +66,7 @@ class ProductController extends Controller
         $data['types'] = Type::where('fg_aktif', 1)->get();
         $data['brands'] = Brand::where('fg_aktif', 1)->get();
         $data['product'] = Product::find($req->product_id);
-        $data['images'] = Product_Image::where('product_id', $req->product_id)->get();
+        $data['images'] = Product_Image::where('product_id', $req->product_id)->orderBy('image_sort')->get();
         return view('master.form.product', $data);
     }
 
@@ -167,7 +167,7 @@ class ProductController extends Controller
             return redirect()->route('master.product.edit', ['product_id' => $product->product_id])->with(['success_message' => 'Berhasil menyimpan data']);
         }catch(Exception $e){
             DB::rollback();
-            return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan', $e->getMessage()]);
+            return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan'.$e->getMessage()]);
         }
     }
 

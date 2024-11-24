@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\ProductTypesController;
 use App\Http\Controllers\Master\ProductBrandsController;
 use App\Http\Controllers\Master\ProductController;
+use App\Http\Controllers\Master\ProductBundleController;
 use App\Http\Controllers\Master\UsersController;
 /*
 |--------------------------------------------------------------------------

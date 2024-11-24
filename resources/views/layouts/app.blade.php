@@ -7,6 +7,7 @@
     <link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="{{ asset('style.css') }}?v=2.13">
+    <link rel="stylesheet" href="{{ asset('footable/css/footable.bootstrap.min.css') }}?v=2.13">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet"> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -61,6 +62,7 @@
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('moment.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('bootstrap/js/popper.min.js') }}" crossorigin="anonymous"></script>
+    <script src="{{ asset('footable/js/footable.min.js') }}" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -80,6 +82,27 @@
                     icon: "success"
                 });
             @endif
+
+            $(".comma-separated").keyup(function(event) {                            
+                if(event.which >= 37 && event.which <= 40) return;
+                // format number
+                $(this).val(function(index, value) {                                                                  
+                    return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");                                                                
+                });                                                  
+            });
+
+            $(".comma-separated").blur(function (){    
+                var val = this.value.replace(/,/g, "");
+                var target = $(this).attr('data-target');
+                target = $("#"+target);
+
+                if(this.value == 'NaN' || val < 0){
+                    $(this).val(0);
+                    target.val(0);
+                } else {
+                    target.val(val);
+                }
+            });
         });
     </script>
     @yield('js')
