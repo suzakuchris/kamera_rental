@@ -144,7 +144,7 @@ Edit Product Bundle
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
-                                        <select class="productInput form-control w-100">
+                                        <select class="select-searchable productInput form-control w-100">
                                             <option value="" disabled selected>Pilih Produk untuk ditambahkan</option>
                                             @foreach($products as $product)
                                             <option value="{{$product->product_id}}">{{$product->product_name}}</option>
@@ -309,7 +309,7 @@ Edit Product Bundle
         _row.find(".input-wrapper input[name='product_add[]']").val(input.val());
         body.find('.no-data').remove();
         body.append(_row);
-        input.val('');
+        input.val('').trigger('change');
     }
 
     function move_up(btn){

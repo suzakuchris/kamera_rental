@@ -12,6 +12,31 @@
     <!-- <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet"> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-search__field{
+            background: #f7f7f7;
+            color: black;
+        }
+
+        .select2-results{
+            display: block;
+            background: #212529;
+            color: white;
+        }
+
+        .select2-selection{
+            border:0px;
+        }
+
+        .select2-selection__rendered{
+            background-color: #212529;
+            color: white !important;
+            border: 1px solid #495057;
+            border-radius: 4px;
+            padding-top: 3px;
+        }
+    </style>
     <style>
         fieldset {
             margin-bottom: 1em !important;
@@ -65,8 +90,10 @@
     <script src="{{ asset('footable/js/footable.min.js') }}" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function(){
+            $(".select-searchable").select2();
             @if(Session::has('error_message'))
                 Swal.fire({
                     icon: "error",

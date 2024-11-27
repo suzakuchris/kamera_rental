@@ -67,7 +67,7 @@ Edit Product
                     <div class="col-6">
                         <div class="form-group">
                             <label>Tipe Produk</label>
-                            <select name="product_type" class="form-control" required>
+                            <select name="product_type" class="select-searchable form-control" required>
                                 <option value="" disabled selected>--Pilih Tipe Produk--</option>
                                 @foreach($types as $type)
                                 <option value="{{$type->product_type_id}}" @if(old('product_type') == $type->product_type_id || (isset($product) && $product->product_type == $type->product_type_id)) selected @endif>{{$type->product_type_name}}</option>
@@ -78,7 +78,7 @@ Edit Product
                     <div class="col-6">
                         <div class="form-group">
                             <label>Brand Produk</label>
-                            <select name="product_brand" class="form-control" required>
+                            <select name="product_brand" class="select-searchable form-control" required>
                                 <option value="" disabled selected>--Pilih Brand Produk--</option>
                                 @foreach($brands as $brand)
                                 <option value="{{$brand->product_brand_id}}" @if(old('product_brand') == $brand->product_brand_id || (isset($product) && $product->product_brand == $brand->product_brand_id)) selected @endif>{{$brand->product_brand_name}}</option>
