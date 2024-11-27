@@ -290,7 +290,6 @@
             </div>
             <div class="modal-body">
                 <form onsubmit="save_form(this);">
-                    <fieldset>
                     <input type="text" class="d-none" name="user_id">
                     <div class="row">
                         <div class="col-12 mb-3">
@@ -327,7 +326,6 @@
                         </div>
                     </div>
                     <button type="submit" class="d-none" id="SubmitBtn"></button>
-                    <fieldset>
                 </form>
             </div>
             <div class="modal-footer">
