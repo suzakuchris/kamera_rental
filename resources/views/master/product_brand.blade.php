@@ -268,7 +268,6 @@
             </div>
             <div class="modal-body">
                 <form onsubmit="save_form(this);">
-                    <fieldset>
                     <input type="text" class="d-none" name="product_brand_id">
                     <div class="row">
                         <div class="col-12">
@@ -279,7 +278,6 @@
                         </div>
                     </div>
                     <button type="submit" class="d-none" id="SubmitBtn"></button>
-                    <fieldset>
                 </form>
             </div>
             <div class="modal-footer">
