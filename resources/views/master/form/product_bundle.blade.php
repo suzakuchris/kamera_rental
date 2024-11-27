@@ -50,7 +50,13 @@
 @endsection
 
 @section('content_header')
+@if($mode == 'add')
 Add New Bundle
+@elseif($mode == 'view')
+View Product Bundle
+@elseif($mode == 'edit')
+Edit Product Bundle
+@endif
 @endsection
 
 @section('content')

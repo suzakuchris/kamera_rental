@@ -228,7 +228,8 @@ class ProductBundleController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('master.product_bundle.edit', ['bundle_id' => $bundle->bundle_id])->with(['success_message' => 'Berhasil menyimpan data']);
+            return redirect()->route('master.product_bundle')->with(['success_message' => 'Berhasil menyimpan data']);
+            // return redirect()->route('master.product_bundle.edit', ['bundle_id' => $bundle->bundle_id])->with(['success_message' => 'Berhasil menyimpan data']);
         }catch(Exception $e){
             DB::rollback();
             return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan'.$e->getMessage()]);

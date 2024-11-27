@@ -27,7 +27,13 @@
 @endsection
 
 @section('content_header')
+@if($mode == 'add')
 Add New Product
+@elseif($mode == 'view')
+View Product
+@elseif($mode == 'edit')
+Edit Product
+@endif
 @endsection
 
 @section('content')
