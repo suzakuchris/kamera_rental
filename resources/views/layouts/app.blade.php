@@ -14,22 +14,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        .select2-search__field{
+        body.dark .select2-search__field{
             background: #f7f7f7;
             color: black;
         }
 
-        .select2-results{
+        body.dark .select2-results{
             display: block;
             background: #212529;
             color: white;
         }
 
-        .select2-selection{
+        body.dark .select2-selection{
             border:0px;
         }
 
-        .select2-selection__rendered{
+        body.dark .select2-selection__rendered{
             background-color: #212529;
             color: white !important;
             border: 1px solid #495057;
