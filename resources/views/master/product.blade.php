@@ -135,7 +135,7 @@
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <a target="FORM_PRODUCT" class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.product.edit')}}/`+y.product_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
+                            <a class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.product.edit')}}/`+y.product_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
                             <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.product_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>
