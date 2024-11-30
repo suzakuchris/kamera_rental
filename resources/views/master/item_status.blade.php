@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content_header')
-<h4>Bundle Product</h4>
+<h4>Master Item Status</h4>
 @endsection
 
 @section('content')
@@ -18,21 +18,18 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-auto">
-                        <a href="{{route('master.product_bundle.add')}}" target="FORM_PRODUCT" class="btn btn-primary">Add New</a>
+                        <button class="btn btn-primary" onclick="add_new();">Add New</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12">
-        <table class="table table-bordered" id="data-table" data-toggle-column="last">
+        <table class="table table-bordered" id="data-table">
             <thead>
                 <tr>
                     <th class="auto-width">No.</th>
-                    <th>Nama Bundle</th>
-                    <th>Deskripsi</th>
-                    <th data-breakpoints="all" data-title="Spesifikasi">Spesifikasi</th>
-                    <th data-breakpoints="all" data-title="Detail">Detail Bundle</th>
+                    <th>Nama Status</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th class="auto-width">Action</th>
@@ -93,7 +90,7 @@
         showLoading();
         $.ajax({
             type    : 'POST',
-            url     : '{{route("master.product_bundle.search")}}',
+            url     : '{{route("master.item_status.search")}}',
             headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType: 'JSON',
             data    : {
@@ -101,9 +98,19 @@
                 'max_row':max_row
             },
             success : function(msg) {
+                console.log(msg);
                 var rs = msg.data;
+                // var dt = rs["data"];
 
                 show_data(rs["data"]);
+                
+                // $('.pagination-wrapper .from-data').html(rs.from);
+                // $('.pagination-wrapper .to-data').html(rs.to);
+                // $('.pagination-wrapper .total-data').html(rs.total);   
+                // $('.data-box .card-footer .pagination-box').html($(msg.pagination));
+
+                // $(".pagination-wrapper").html();
+                // $(".pagination-wrapper").html();
                 $(".pagination-links").html($(msg.pagination));
             },
             error     : function(xhr) {
@@ -125,29 +132,15 @@
             if(y.updated_at){
                 updated = moment(y.updated_at).format('DD MMM YYYY hh:mm:ss');
             }
-
-            var details = '';
-            $.each(y.details, function(a,b){
-                details += `
-                    <div class="mb-2">`+b.product_name+`<br/><span class="badge bg-primary">`+b.product_type_name+`</span><span class="ms-1 badge bg-primary">`+b.product_brand_name+`</span> x`+b.jumlah_item+`</div>
-                `;
-            });
-            if(details == ''){
-                details = 'Belum ada produk';
-            }
             rows += `
                 <tr>
                     <td>`+(++page)+`.</td>
-                    <td>`+y.bundle_name+`</td>
-                    <td>`+y.bundle_description+`</td>
-                    <td>`+y.bundle_specification+`</td>
-                    <td>`+details+`</td>
+                    <td>`+y.status_name+`</td>
                     <td>`+created+`</td>
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.product_bundle.edit')}}/`+y.bundle_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
-                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.bundle_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" onclick="edit_data(`+y.status_id+`)"><i class="bi bi-pencil me-2"></i>Edit</button>
                         </div>
                     </td>
                 </tr>
@@ -155,16 +148,76 @@
         });
 
         if(rows == ''){
-            // var length = $("#data-table thead th").length;
-            // rows = `
-            //     <tr>
-            //         <td colspan="`+(length-2)+`">Data kosong</td>
-            //     </tr>
-            // `
+            var length = $("#data-table thead th").length;
+            rows = `
+                <tr>
+                    <td colspan="`+length+`">Data kosong</td>
+                </tr>
+            `
         }
 
         $("#data-table tbody").html(rows);
-        $('#data-table').footable();
+    }
+
+    function add_new(){
+        var form = $("#form_modal form");
+        form.trigger('reset');
+
+        $("#form_modal").modal('show');
+    }
+
+    function edit_data(id){
+        showLoading();
+        $.ajax({
+            type    : 'POST',
+            url     : '{{route("master.item_status.view")}}',
+            headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+            dataType: 'JSON',
+            data    : {
+                'status_id':id,
+            },
+            success : function(msg) {
+                console.log(msg);
+                fill_form(msg);
+                $("#form_modal").modal('show');
+            },
+            error     : function(xhr) {
+                console.log(xhr);
+            },
+            complete : function(xhr,status){
+                closeLoading();
+            }
+        })
+    }
+
+    function fill_form(data){
+        var form = $("#form_modal form");
+        form.trigger('reset');
+        form.find("[name='status_id']").val(data.status_id);
+        form.find("[name='status_name']").val(data.status_name)
+    }
+
+    function save_form(form){
+        showLoading();
+        var dtForm = $(form).serializeArray();
+        $.ajax({
+            type        : 'POST',
+            url         : '{{route("master.item_status.upsert")}}',
+            headers     : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+            dataType    : 'JSON',
+            data        : dtForm,
+            success     : function(msg) {
+                $("#form_modal form").trigger("reset");
+                $('#form_modal').modal('hide');
+            },
+            error       : function(xhr) {
+                console.log(xhr);
+            },
+            complete    : function(xhr){
+                closeLoading();
+                search_process();
+            }
+        });
     }
 
     function delete_data(id){
@@ -180,15 +233,14 @@
                 showLoading();
                 $.ajax({
                     type    : 'POST',
-                    url     : '{{route("master.product_bundle.delete")}}',
+                    url     : '{{route("master.item_status.delete")}}',
                     headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
                     dataType: 'JSON',
                     data    : {
-                        'bundle_id':id,
+                        'status_id':id,
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");
-                        search_process();
                     },
                     error     : function(xhr) {
                         console.log(xhr);
@@ -203,4 +255,35 @@
         });
     }
 </script>
+@endsection
+
+@section('footer')
+<div class="modal fade" id="form_modal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="formModalLabel">Data Status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="save_form(this);">
+                    <input type="text" class="d-none" name="status_id">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Nama Status</label>
+                                <input type="text" class="form-control" name="status_name" required placeholder="Masukan nama status">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="d-none" id="SubmitBtn"></button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <label for="SubmitBtn" class="btn btn-primary">Save</label>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

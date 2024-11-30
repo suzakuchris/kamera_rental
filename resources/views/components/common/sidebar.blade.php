@@ -3,7 +3,7 @@
       <div class="card-header p-0 border-0" style="background:transparent;border:0px;">
         <header>
             <span class="image">
-                <img class="w-100" src="https://cdn.icon-icons.com/icons2/2699/PNG/512/laravel_logo_icon_170314.png" alt="">
+                <img class="w-100" src="{{asset('Logo_2b_1300x.png')}}" alt="">
             </span>
             <i class='bi bi-chevron-right toggle p-1' style="font-size:10px;"></i>
         </header>
@@ -40,6 +40,14 @@
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Type</span>
                       </a>
+                      <a class="py-2 my-1" href="{{route('master.item_status')}}">
+                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <span class="text nav-text">Status</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.item_condition')}}">
+                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <span class="text nav-text">Condition</span>
+                      </a>
                       <a class="py-2 my-1" href="{{route('master.product')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Product</span>
@@ -48,13 +56,21 @@
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Bundle</span>
                       </a>
+                      <a class="py-2 my-1" href="{{route('master.item')}}">
+                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <span class="text nav-text">Inventory</span>
+                      </a>
                       <a class="py-2 my-1" href="{{route('master.users')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">User</span>
                       </a>
-                      <a class="py-2 my-1" href="#master">
+                      <a class="py-2 my-1" href="{{route('master.customer')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Customer</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.mitra')}}">
+                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <span class="text nav-text">Mitra</span>
                       </a>
                     </div>
                   </li>

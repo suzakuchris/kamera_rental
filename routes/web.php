@@ -8,6 +8,12 @@ use App\Http\Controllers\Master\ProductBrandsController;
 use App\Http\Controllers\Master\ProductController;
 use App\Http\Controllers\Master\ProductBundleController;
 use App\Http\Controllers\Master\UsersController;
+use App\Http\Controllers\Master\ItemController;
+use App\Http\Controllers\Master\CustomerController;
+use App\Http\Controllers\Master\ConditionController;
+use App\Http\Controllers\Master\StatusController;
+use App\Http\Controllers\Master\MitraController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,12 +61,52 @@ Route::group(['middleware' => 'auth'], function(){
             Route::post('/delete', [ProductTypesController::class, 'delete'])->name('master.product_types.delete');
         });
 
+        Route::group(['prefix' => 'item-status'], function(){
+            Route::get('/', [StatusController::class, 'index'])->name('master.item_status');
+            Route::post('/search', [StatusController::class, 'search'])->name('master.item_status.search');
+            Route::post('/view', [StatusController::class, 'view'])->name('master.item_status.view');
+            Route::post('/upsert', [StatusController::class, 'upsert'])->name('master.item_status.upsert');
+            Route::post('/delete', [StatusController::class, 'delete'])->name('master.item_status.delete');
+        });
+
+        Route::group(['prefix' => 'item-condition'], function(){
+            Route::get('/', [ConditionController::class, 'index'])->name('master.item_condition');
+            Route::post('/search', [ConditionController::class, 'search'])->name('master.item_condition.search');
+            Route::post('/view', [ConditionController::class, 'view'])->name('master.item_condition.view');
+            Route::post('/upsert', [ConditionController::class, 'upsert'])->name('master.item_condition.upsert');
+            Route::post('/delete', [ConditionController::class, 'delete'])->name('master.item_condition.delete');
+        });
+
         Route::group(['prefix' => 'product-brands'], function(){
             Route::get('/', [ProductBrandsController::class, 'index'])->name('master.product_brands');
             Route::post('/search', [ProductBrandsController::class, 'search'])->name('master.product_brands.search');
             Route::post('/view', [ProductBrandsController::class, 'view'])->name('master.product_brands.view');
             Route::post('/upsert', [ProductBrandsController::class, 'upsert'])->name('master.product_brands.upsert');
             Route::post('/delete', [ProductBrandsController::class, 'delete'])->name('master.product_brands.delete');
+        });
+
+        Route::group(['prefix' => 'customer'], function(){
+            Route::get('/', [CustomerController::class, 'index'])->name('master.customer');
+            Route::post('/search', [CustomerController::class, 'search'])->name('master.customer.search');
+
+            Route::get('/view/{customer_id?}', [CustomerController::class, 'view'])->name('master.customer.view');
+            Route::get('/edit/{customer_id?}', [CustomerController::class, 'edit'])->name('master.customer.edit');
+            Route::get('/add', [CustomerController::class, 'add'])->name('master.customer.add');
+
+            Route::post('/upsert', [CustomerController::class, 'upsert'])->name('master.customer.upsert');
+            Route::post('/delete', [CustomerController::class, 'delete'])->name('master.customer.delete');
+        });
+
+        Route::group(['prefix' => 'mitra'], function(){
+            Route::get('/', [MitraController::class, 'index'])->name('master.mitra');
+            Route::post('/search', [MitraController::class, 'search'])->name('master.mitra.search');
+
+            Route::get('/view/{mitra_id?}', [MitraController::class, 'view'])->name('master.mitra.view');
+            Route::get('/edit/{mitra_id?}', [MitraController::class, 'edit'])->name('master.mitra.edit');
+            Route::get('/add', [MitraController::class, 'add'])->name('master.mitra.add');
+
+            Route::post('/upsert', [MitraController::class, 'upsert'])->name('master.mitra.upsert');
+            Route::post('/delete', [MitraController::class, 'delete'])->name('master.mitra.delete');
         });
 
         Route::group(['prefix' => 'products'], function(){
@@ -90,6 +136,27 @@ Route::group(['middleware' => 'auth'], function(){
         Route::group(['prefix' => 'items'], function(){
             Route::get('/', [ItemController::class, 'index'])->name('master.item');
             Route::post('/search', [ItemController::class, 'search'])->name('master.item.search');
+            Route::get('/product/{product_id?}', [ItemController::class, 'product_header'])->name('master.item.product.form');
+            Route::post('/search-item', [ItemController::class, 'search_item'])->name('master.item.product.form.search');
+
+            Route::get('/view/{item_id?}', [ItemController::class, 'view'])->name('master.item.view');
+            Route::get('/edit/{item_id?}', [ItemController::class, 'edit'])->name('master.item.edit');
+            Route::get('/add/{product_id?}', [ItemController::class, 'add'])->name('master.item.add');
+
+            Route::post('/upsert', [ItemController::class, 'upsert'])->name('master.item.upsert');
+            Route::post('/delete', [ItemController::class, 'delete'])->name('master.item.delete');
+        });
+
+        Route::group(['prefix' => 'customers'], function(){
+            Route::get('/', [CustomerController::class, 'index'])->name('master.customer');
+            Route::post('/search', [CustomerController::class, 'search'])->name('master.customer.search');
+            
+            Route::get('/view/{customer_id?}', [CustomerController::class, 'view'])->name('master.customer.view');
+            Route::get('/edit/{customer_id?}', [CustomerController::class, 'edit'])->name('master.customer.edit');
+            Route::get('/add', [CustomerController::class, 'add'])->name('master.customer.add');
+
+            Route::post('/upsert', [CustomerController::class, 'upsert'])->name('master.customer.upsert');
+            Route::post('/delete', [CustomerController::class, 'delete'])->name('master.customer.delete');
         });
     });
 });

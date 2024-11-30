@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content_header')
-<h4>Bundle Product</h4>
+<h4>Master Customer</h4>
 @endsection
 
 @section('content')
@@ -18,21 +18,21 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-auto">
-                        <a href="{{route('master.product_bundle.add')}}" target="FORM_PRODUCT" class="btn btn-primary">Add New</a>
+                        <a href="{{route('master.customer.add')}}" target="FORM_PRODUCT" class="btn btn-primary">Add New</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12">
-        <table class="table table-bordered" id="data-table" data-toggle-column="last">
+        <table class="table table-bordered" id="data-table">
             <thead>
                 <tr>
                     <th class="auto-width">No.</th>
-                    <th>Nama Bundle</th>
-                    <th>Deskripsi</th>
-                    <th data-breakpoints="all" data-title="Spesifikasi">Spesifikasi</th>
-                    <th data-breakpoints="all" data-title="Detail">Detail Bundle</th>
+                    <th>Nama Customer</th>
+                    <th>Email</th>
+                    <th>No. Hp</th>
+                    <th>Alamat</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th class="auto-width">Action</th>
@@ -93,7 +93,7 @@
         showLoading();
         $.ajax({
             type    : 'POST',
-            url     : '{{route("master.product_bundle.search")}}',
+            url     : '{{route("master.customer.search")}}',
             headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType: 'JSON',
             data    : {
@@ -101,6 +101,7 @@
                 'max_row':max_row
             },
             success : function(msg) {
+                console.log(msg);
                 var rs = msg.data;
 
                 show_data(rs["data"]);
@@ -125,29 +126,19 @@
             if(y.updated_at){
                 updated = moment(y.updated_at).format('DD MMM YYYY hh:mm:ss');
             }
-
-            var details = '';
-            $.each(y.details, function(a,b){
-                details += `
-                    <div class="mb-2">`+b.product_name+`<br/><span class="badge bg-primary">`+b.product_type_name+`</span><span class="ms-1 badge bg-primary">`+b.product_brand_name+`</span> x`+b.jumlah_item+`</div>
-                `;
-            });
-            if(details == ''){
-                details = 'Belum ada produk';
-            }
             rows += `
                 <tr>
                     <td>`+(++page)+`.</td>
-                    <td>`+y.bundle_name+`</td>
-                    <td>`+y.bundle_description+`</td>
-                    <td>`+y.bundle_specification+`</td>
-                    <td>`+details+`</td>
+                    <td>`+y.customer_name+`</td>
+                    <td>`+y.customer_email+`</td>
+                    <td>`+y.customer_phone+`</td>
+                    <td>`+y.customer_address+`</td>
                     <td>`+created+`</td>
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.product_bundle.edit')}}/`+y.bundle_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
-                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.bundle_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
+                            <a class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.customer.edit')}}/`+y.customer_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
+                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.customer_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -155,16 +146,15 @@
         });
 
         if(rows == ''){
-            // var length = $("#data-table thead th").length;
-            // rows = `
-            //     <tr>
-            //         <td colspan="`+(length-2)+`">Data kosong</td>
-            //     </tr>
-            // `
+            var length = $("#data-table thead th").length;
+            rows = `
+                <tr>
+                    <td colspan="`+length+`">Data kosong</td>
+                </tr>
+            `
         }
 
         $("#data-table tbody").html(rows);
-        $('#data-table').footable();
     }
 
     function delete_data(id){
@@ -180,11 +170,11 @@
                 showLoading();
                 $.ajax({
                     type    : 'POST',
-                    url     : '{{route("master.product_bundle.delete")}}',
+                    url     : '{{route("master.customer.delete")}}',
                     headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
                     dataType: 'JSON',
                     data    : {
-                        'bundle_id':id,
+                        'customer_id':id,
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");

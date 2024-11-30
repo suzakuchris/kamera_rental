@@ -21,6 +21,9 @@
 @section('content')
 <div class="row mx-0 h-100 d-flex justify-content-center align-items-center">
     <div class="col-12 col-md-6 col-xl-4">
+        <div class="m-4">
+            <img src="{{asset('fm_camera_horizontal.png')}}" class="w-100">
+        </div>
         <div class="card mb-4">
             <div class="card-header text-center"><h5><i class="bi bi-camera me-2"></i>Kamera Rental System</h5></div>
             <div class="card-body">
