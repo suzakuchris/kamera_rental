@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content_header')
-<h4>Master User</h4>
+<h4>Master Rekening</h4>
 @endsection
 
 @section('content')
@@ -11,6 +11,14 @@
             <div class="col"></div>
             <div class="col-auto pe-0">
                 <div class="row mx-0">
+                    <div class="col-12 col-md-auto">
+                        <select id="bank-search" class="form-control">
+                            <option value="">Pilih Bank</option>
+                            @foreach(bank_lists() as $bank)
+                            <option value="{{$bank}}">{{$bank}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="col-12 col-md-auto">
                         <div class="input-group">
                             <input id="text-search" type="text" class="form-control" placeholder="Search..">
@@ -29,8 +37,9 @@
             <thead>
                 <tr>
                     <th class="auto-width">No.</th>
-                    <th>Nama</th>
-                    <th>Email</th>
+                    <th>Nama Nasabah</th>
+                    <th>Nomor Rekening</th>
+                    <th>Bank</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th class="auto-width">Action</th>
@@ -56,7 +65,7 @@
             event.preventDefault();
         });
 
-        $("#row_count, #text-search").change(function(){
+        $("#row_count, #text-search, #bank-search").change(function(){
             search_process();
         });
 
@@ -65,31 +74,25 @@
 
     function search_process(){
         var search = $("#text-search").val();
+        var bank = $("#bank-search").val();
         var max_row = $("#row_count").val();
         showLoading();
         $.ajax({
             type    : 'POST',
-            url     : '{{route("master.users.search")}}',
+            url     : '{{route("master.rekening.search")}}',
             headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType: 'JSON',
             data    : {
                 'page':curr_page,
-                'max_row':max_row
+                'max_row':max_row,
+                'search':search,
+                'bank':bank
             },
             success : function(msg) {
                 console.log(msg);
                 var rs = msg.data;
-                // var dt = rs["data"];
-
                 show_data(rs["data"]);
                 
-                // $('.pagination-wrapper .from-data').html(rs.from);
-                // $('.pagination-wrapper .to-data').html(rs.to);
-                // $('.pagination-wrapper .total-data').html(rs.total);   
-                // $('.data-box .card-footer .pagination-box').html($(msg.pagination));
-
-                // $(".pagination-wrapper").html();
-                // $(".pagination-wrapper").html();
                 $(".pagination-links").html($(msg.pagination));
             },
             error     : function(xhr) {
@@ -111,21 +114,18 @@
             if(y.updated_at){
                 updated = moment(y.updated_at).format('DD MMM YYYY hh:mm:ss');
             }
-            var disabled = '';
-            if(y.id == 1){
-                disabled = 'disabled';
-            }
             rows += `
                 <tr>
                     <td>`+(++page)+`.</td>
-                    <td>`+y.name+`</td>
-                    <td>`+y.email+`</td>
+                    <td>`+y.rekening_atas_nama+`</td>
+                    <td>`+y.rekening_number+`</td>
+                    <td>`+y.rekening_nama_bank+`</td>
                     <td>`+created+`</td>
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <button `+disabled+` class="btn btn-outline-primary d-flex align-items-center" onclick="edit_data(`+y.id+`)"><i class="bi bi-pencil me-2"></i>Edit</button>
-                            <button `+disabled+` class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
+                            <button class="btn btn-outline-primary d-flex align-items-center" onclick="edit_data(`+y.rekening_id+`)"><i class="bi bi-pencil me-2"></i>Edit</button>
+                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.rekening_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -155,11 +155,11 @@
         showLoading();
         $.ajax({
             type    : 'POST',
-            url     : '{{route("master.users.view")}}',
+            url     : '{{route("master.rekening.view")}}',
             headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType: 'JSON',
             data    : {
-                'user_id':id,
+                'rekening_id':id,
             },
             success : function(msg) {
                 console.log(msg);
@@ -178,10 +178,10 @@
     function fill_form(data){
         var form = $("#form_modal form");
         form.trigger('reset');
-        form.find("[name='user_id']").val(data.id);
-        form.find("[name='name']").val(data.name)
-        form.find("[name='email']").val(data.email)
-        form.find("[name='role']").val(data.role)
+        form.find("[name='rekening_id']").val(data.rekening_id);
+        form.find("[name='rekening_name']").val(data.rekening_atas_nama)
+        form.find("[name='rekening_number']").val(data.rekening_number)
+        form.find("[name='rekening_bank']").val(data.rekening_nama_bank)
     }
 
     function save_form(form){
@@ -189,7 +189,7 @@
         var dtForm = $(form).serializeArray();
         $.ajax({
             type        : 'POST',
-            url         : '{{route("master.users.upsert")}}',
+            url         : '{{route("master.rekening.upsert")}}',
             headers     : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType    : 'JSON',
             data        : dtForm,
@@ -207,20 +207,6 @@
         });
     }
 
-    function toggle_password(btn){
-        var button = $(btn);
-        var input = button.prev();
-        button.find("i").toggle('fa-eye');
-        button.find("i").toggle('fa-eye-slash');
-
-        var current = input.attr('type');
-        if(current == "password"){
-            input.attr('type', 'text');
-        }else{
-            input.attr('type', 'password');
-        }
-    }
-
     function delete_data(id){
         Swal.fire({
             title: "Apakah anda yakin mau menghapus data?",
@@ -234,11 +220,11 @@
                 showLoading();
                 $.ajax({
                     type    : 'POST',
-                    url     : '{{route("master.users.delete")}}',
+                    url     : '{{route("master.rekening.delete")}}',
                     headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
                     dataType: 'JSON',
                     data    : {
-                        'user_id':id,
+                        'rekening_id':id,
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");
@@ -263,41 +249,32 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="formModalLabel">Data User</h1>
+                <h1 class="modal-title fs-5" id="formModalLabel">Data Rekening</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form onsubmit="save_form(this);">
-                    <input type="text" class="d-none" name="user_id">
+                    <input type="text" class="d-none" name="rekening_id">
                     <div class="row">
-                        <div class="col-12 mb-3">
+                        <div class="col-12">
                             <div class="form-group">
-                                <label>Nama</label>
-                                <input type="text" class="form-control" name="name" required placeholder="Masukan nama">
+                                <label>Nama Nasabah</label>
+                                <input type="text" class="form-control" name="rekening_name" required placeholder="Masukan nama rekening">
                             </div>
                         </div>
-                        <div class="col-12 mb-3">
+                        <div class="col-12">
                             <div class="form-group">
-                                <label>E-mail</label>
-                                <input type="email" class="form-control" name="email" required placeholder="Masukan email">
+                                <label>Nomor Rekening</label>
+                                <input type="number" class="form-control" name="rekening_number" required placeholder="Masukan nomor rekening">
                             </div>
                         </div>
-                        <div class="col-12 mb-3">
+                        <div class="col-12">
                             <div class="form-group">
-                                <label>Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" name="password" required placeholder="Masukan password">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="toggle_password(this);"><i class="bi bi-eye"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <div class="form-group">
-                                <label>Role</label>
-                                <select class="form-control" name="role" required>
-                                    <option value="" selected disabled>--Pilih Role--</option>
-                                    @foreach($roles as $k=>$role)
-                                    <option value="{{$k}}">{{$role}}</option>
+                                <label>Bank</label>
+                                <select class="form-control" required name="rekening_bank">
+                                    <option value="">Pilih Bank</option>
+                                    @foreach(bank_lists() as $bank)
+                                    <option value="{{$bank}}">{{$bank}}</option>
                                     @endforeach
                                 </select>
                             </div>

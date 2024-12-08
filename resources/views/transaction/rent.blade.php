@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content_header')
-<h4>Master Product</h4>
+<h4>Transaksi</h4>
 @endsection
 
 @section('content')
@@ -12,13 +12,21 @@
             <div class="col-auto pe-0">
                 <div class="row mx-0">
                     <div class="col-12 col-md-auto">
+                        <select id="bank-search" class="form-control">
+                            <option value="">Pilih Bank</option>
+                            @foreach(bank_lists() as $bank)
+                            <option value="{{$bank}}">{{$bank}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-auto">
                         <div class="input-group">
                             <input id="text-search" type="text" class="form-control" placeholder="Search..">
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
                         </div>
                     </div>
                     <div class="col-12 col-md-auto">
-                        <a href="{{route('master.product.add')}}" target="FORM_PRODUCT" class="btn btn-primary">Add New</a>
+                        <a href="{{route('transaction.rent.add')}}" class="btn btn-primary">Add New</a>
                     </div>
                 </div>
             </div>
@@ -29,9 +37,9 @@
             <thead>
                 <tr>
                     <th class="auto-width">No.</th>
-                    <th>Nama Produk</th>
-                    <th>Tipe</th>
-                    <th>Brand</th>
+                    <th>Nama Nasabah</th>
+                    <th>Nomor Rekening</th>
+                    <th>Bank</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th class="auto-width">Action</th>
@@ -57,7 +65,7 @@
             event.preventDefault();
         });
 
-        $("#row_count, #text-search").change(function(){
+        $("#row_count, #text-search, #bank-search").change(function(){
             search_process();
         });
 
@@ -66,22 +74,24 @@
 
     function search_process(){
         var search = $("#text-search").val();
+        var bank = $("#bank-search").val();
         var max_row = $("#row_count").val();
         showLoading();
         $.ajax({
             type    : 'POST',
-            url     : '{{route("master.product.search")}}',
+            url     : '{{route("transaction.rent.search")}}',
             headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
             dataType: 'JSON',
             data    : {
                 'page':curr_page,
-                'max_row':max_row
+                'max_row':max_row,
+                'search':search,
+                'bank':bank
             },
             success : function(msg) {
-                console.log(msg);
                 var rs = msg.data;
-
                 show_data(rs["data"]);
+                
                 $(".pagination-links").html($(msg.pagination));
             },
             error     : function(xhr) {
@@ -98,6 +108,8 @@
         var _curr_page = curr_page;
         var page = (_curr_page * max_row) - max_row;
         $.each(data, function(x,y){
+            var tgl_ambil = moment(y.transaction_tgl_ambil).format('DD MMM YYYY hh:mm:ss');
+            var tgl_return = moment(y.transaction_tgl_pemulangan).format('DD MMM YYYY hh:mm:ss');
             var created = moment(y.created_at).format('DD MMM YYYY hh:mm:ss');
             var updated = '-';
             if(y.updated_at){
@@ -106,15 +118,24 @@
             rows += `
                 <tr>
                     <td>`+(++page)+`.</td>
-                    <td>`+y.product_name+`</td>
-                    <td>`+y.product_type_name+`</td>
-                    <td>`+y.product_brand_name+`</td>
+                    <td>
+                        <div>`+y.transaction_number+`</div>
+                        <div class="small text-muted">`+y.transaction_notes+`</div>
+                    </td>
+                    <td>
+                        <div>`+y.customer_name+`</div>
+                        <div class="small text-muted">`+y.customer_phone+` - `+y.customer_email+`</div>
+                    </td>
+                    <td>`+tgl_ambil+`</td>
+                    <td>`+tgl_return+`</td>
+                    <td>`+numberWithCommas(y.transaction_amount)+`</td>
+                    <td>`+y.rekening_atas_nama+` - `+y.rekening_number+` (`+y.rekening_nama_bank+`)</td>
                     <td>`+created+`</td>
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <a class="btn btn-outline-primary d-flex align-items-center" href="{{route('master.product.edit')}}/`+y.product_id+`"><i class="bi bi-pencil me-2"></i>Edit</a>
-                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.product_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
+                            <a href="{{route('transaction.rent.view')}}/`+y.transaction_id+`" class="btn btn-outline-primary d-flex align-items-center"><i class="bi bi-pencil me-2"></i>Edit</a>
+                            <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.transaction_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -146,15 +167,14 @@
                 showLoading();
                 $.ajax({
                     type    : 'POST',
-                    url     : '{{route("master.product.delete")}}',
+                    url     : '{{route("transaction.rent.delete")}}',
                     headers : { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
                     dataType: 'JSON',
                     data    : {
-                        'product_id':id,
+                        'transaction_id':id,
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");
-                        search_process();
                     },
                     error     : function(xhr) {
                         console.log(xhr);
@@ -169,4 +189,8 @@
         });
     }
 </script>
+@endsection
+
+@section('footer')
+
 @endsection

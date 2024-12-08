@@ -3,7 +3,7 @@
       <div class="card-header p-0 border-0" style="background:transparent;border:0px;">
         <header>
             <span class="image">
-                <img class="w-100" src="{{asset('Logo_2b_1300x.png')}}" alt="">
+                <img class="w-100" src="{{asset(site_config()->site_logo)}}" alt="">
             </span>
             <i class='bi bi-chevron-right toggle p-1' style="font-size:10px;"></i>
         </header>
@@ -32,6 +32,10 @@
                       </a>
                     </div>
                     <div class="collapse ps-4" id="collapseExample">
+                      <a class="py-2 my-1" href="{{route('master.rekening')}}">
+                          <i class='bi bi-wallet icon'></i>  
+                          <span class="text nav-text">Rekening</span>
+                      </a>
                       <a class="py-2 my-1" href="{{route('master.product_brands')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Brand</span>
@@ -82,11 +86,17 @@
                       </a>
                     </div>
                     <div class="collapse ps-4" id="collapseExample2">
-                      <a class="py-2 my-1" href="#master">
+                      <a class="py-2 my-1" href="{{route('transaction.rent')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Brand</span>
+                          <span class="text nav-text">Transaction</span>
                       </a>
                     </div>
+                  </li>
+                  <li class="nav-link">
+                    <a class="py-2" href="{{route('config.main')}}">
+                        <i class='bi bi-gear icon'></i>
+                        <span class="text nav-text">Settings</span>
+                    </a>
                   </li>
               </ul>
             </div>

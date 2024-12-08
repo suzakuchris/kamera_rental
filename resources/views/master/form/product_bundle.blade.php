@@ -198,7 +198,7 @@ Edit Product Bundle
                             <tfoot>
                                 <tr>
                                     <td class="input-wrapper" colspan="2">
-                                        <input accept="image/png, image/gif, image/jpeg" type="file" class="form-control imageinput">
+                                        <input accept="image/*" type="file" class="form-control imageinput">
                                         <input type="text" class="d-none base64input">
                                     </td>
                                     <td>
@@ -370,7 +370,7 @@ Edit Product Bundle
     </tr>
     <tr class="input-row-visible">
         <td>
-            <input type="file" class="form-control imageinput">
+            <input type="file" accept="image/*" class="form-control imageinput">
             <input type="text" class="d-none base64input">
         </td>
     </tr>

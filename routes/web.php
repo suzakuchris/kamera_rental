@@ -13,6 +13,8 @@ use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Master\ConditionController;
 use App\Http\Controllers\Master\StatusController;
 use App\Http\Controllers\Master\MitraController;
+use App\Http\Controllers\Master\RekeningController;
+use App\Http\Controllers\ConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,20 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
     });
 
+    Route::group(['prefix' => 'config'], function(){
+        Route::get('/', [ConfigController::class, 'index'])->name('config.main');
+        Route::post('/save', [ConfigController::class, 'save'])->name('config.main.save');
+    });
+
     Route::group(['prefix' => 'master'], function(){
+        Route::group(['prefix' => 'rekening'], function(){
+            Route::get('/', [RekeningController::class, 'index'])->name('master.rekening');
+            Route::post('/search', [RekeningController::class, 'search'])->name('master.rekening.search');
+            Route::post('/view', [RekeningController::class, 'view'])->name('master.rekening.view');
+            Route::post('/upsert', [RekeningController::class, 'upsert'])->name('master.rekening.upsert');
+            Route::post('/delete', [RekeningController::class, 'delete'])->name('master.rekening.delete');
+        });
+
         Route::group(['prefix' => 'users'], function(){
             Route::get('/', [UsersController::class, 'index'])->name('master.users');
             Route::post('/search', [UsersController::class, 'search'])->name('master.users.search');
@@ -157,6 +172,21 @@ Route::group(['middleware' => 'auth'], function(){
 
             Route::post('/upsert', [CustomerController::class, 'upsert'])->name('master.customer.upsert');
             Route::post('/delete', [CustomerController::class, 'delete'])->name('master.customer.delete');
+        });
+    });
+
+    Route::group(['prefix' => 'transaction'], function(){
+        Route::group(['prefix' => 'rent'], function(){
+            Route::get('/', [TransactionController::class, 'index'])->name('transaction.rent');
+            Route::post('/search', [TransactionController::class, 'search'])->name('transaction.rent.search');
+
+            Route::get('/new', [TransactionController::class, 'add'])->name('transaction.rent.add');
+            Route::get('/view/{transaction_id}', [TransactionController::class, 'view'])->name('transaction.rent.view');
+            //print = ngelock
+            Route::get('/print/{transaction_id}', [TransactionController::class, 'print'])->name('transaction.rent.print');
+
+            Route::post('/upsert', [TransactionController::class, 'upsert'])->name('transaction.rent.upsert');
+            Route::post('/delete', [TransactionController::class, 'delete'])->name('transaction.rent.delete');
         });
     });
 });

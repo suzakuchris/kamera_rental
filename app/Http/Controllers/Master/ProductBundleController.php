@@ -109,17 +109,15 @@ class ProductBundleController extends Controller
         $validator = Validator::make($req->all(), [
             'bundle_name' => 'required|max:255',
             'bundle_price' => 'required',
-            'bundle_description' => 'required',
+            // 'bundle_description' => 'required',
             'bundle_specification' => 'required',
             'product_add' => 'required_without:product_keep',
             'product_keep' => 'required_without:product_add',
-            'bundle_images_add' => 'required_without:bundle_images_keep',
-            'bundle_images_keep' => 'required_without:bundle_images_add'
         ],[
             'bundle_name.required' => 'Nama produk bundling harus diisi',
             'bundle_name.max' => 'Nama produk maksimal :max karakter',
             'bundle_price.required' => 'Harga estimasi harus diisi',
-            'bundle_description.required' => 'Deskripsi bundling produk harus diisi',
+            // 'bundle_description.required' => 'Deskripsi bundling produk harus diisi',
             'bundle_specification.required' => 'Spesifikasi bundling produk harus diisi'
         ]);
 
