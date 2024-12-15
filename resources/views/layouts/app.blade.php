@@ -36,6 +36,10 @@
             border-radius: 4px;
             padding-top: 3px;
         }
+
+        span.select2-selection.select2-selection--single, .select2-container--default .select2-selection--single .select2-selection__rendered{
+            height:100%;
+        }
     </style>
     <style>
         fieldset {
@@ -93,7 +97,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function(){
-            $(".select-searchable").select2();
+            $(".select-searchable").select2({ width: 'resolve' });
             @if(Session::has('error_message'))
                 Swal.fire({
                     icon: "error",

@@ -68,8 +68,6 @@
         $("#row_count, #text-search, #bank-search").change(function(){
             search_process();
         });
-
-        
     });
 
     function search_process(){

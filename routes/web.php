@@ -15,6 +15,7 @@ use App\Http\Controllers\Master\StatusController;
 use App\Http\Controllers\Master\MitraController;
 use App\Http\Controllers\Master\RekeningController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\Transaction\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,9 +182,9 @@ Route::group(['middleware' => 'auth'], function(){
             Route::post('/search', [TransactionController::class, 'search'])->name('transaction.rent.search');
 
             Route::get('/new', [TransactionController::class, 'add'])->name('transaction.rent.add');
-            Route::get('/view/{transaction_id}', [TransactionController::class, 'view'])->name('transaction.rent.view');
+            Route::get('/view/{transaction_id?}', [TransactionController::class, 'view'])->name('transaction.rent.view');
             //print = ngelock
-            Route::get('/print/{transaction_id}', [TransactionController::class, 'print'])->name('transaction.rent.print');
+            Route::get('/print/{transaction_id?}', [TransactionController::class, 'print'])->name('transaction.rent.print');
 
             Route::post('/upsert', [TransactionController::class, 'upsert'])->name('transaction.rent.upsert');
             Route::post('/delete', [TransactionController::class, 'delete'])->name('transaction.rent.delete');

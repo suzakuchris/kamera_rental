@@ -10,6 +10,10 @@ use DB;
 use Exception;
 use Validator;
 
+use App\Models\Master\Customer;
+use App\Models\Master\Rekening;
+use App\Models\Master\Product;
+use App\Models\Master\Product_Bundling as Bundle;
 use App\Models\Transaction\Header;
 use App\Models\Transaction\Detail;
 
@@ -19,7 +23,7 @@ class TransactionController extends Controller
         return view('transaction.rent');
     }
 
-    public function search(){
+    public function search(Request $req){
         $qr_data = DB::table('transaction_header as a')
                     ->select(
                         'a.*', 'b.name as create_name', 'c.name as update_name',
@@ -46,5 +50,58 @@ class TransactionController extends Controller
         $data['pagination'] =  (string) $qrData->links();
         
         return json_encode($data);
+    }
+
+    public function add(){
+        $data['mode'] = 'add';
+        $data['customers'] = Customer::where('fg_aktif', 1)->get();
+        $data['rekenings'] = Rekening::where('fg_aktif', 1)->get();
+        $data['products'] = Product::where('fg_aktif', 1)->get();
+        $data['bundles'] = Bundle::where('fg_aktif', 1)->get();
+        return view('transaction.form.rent', $data);
+    }
+
+    public function view(Request $req){
+        $data['mode'] = 'view';
+        return view('transaction.form.rent', $data);
+    }
+
+    public function edit(Request $req){
+        $data['mode'] = 'edit';
+        return view('transaction.form.rent', $data);
+    }
+
+    public function upsert(Request $req){
+        $validator = Validator::make($req->all(), [
+            'status_name' => 'required|max:255',
+        ],[
+            'status_name.required' => 'Status harus diisi',
+            'status_name.max' => 'Status maksimal :max kata'
+        ]);
+
+        if($validator->fails()) {
+            $errorArr = json_decode($validator->errors());//$validator->messages();
+            $errorStr ='';
+
+            foreach ($errorArr as $item) {
+                $errorStr .= '<div>'.$item[0].'</div>';
+            }
+
+            http_response_code(405);
+            exit(json_encode(['Message' => $errorStr]));
+        }
+
+        $user = Auth::user()->id;
+        DB::beginTransaction();
+        try{
+
+            DB::commit();
+            http_response_code(200);
+            exit(json_encode(['Message' => 'Data berhasil disimpan']));
+        }catch(Exception $e){
+            DB::rollback();
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+        }
     }
 }
