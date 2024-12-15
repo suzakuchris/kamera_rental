@@ -86,7 +86,7 @@
                       </a>
                     </div>
                     <div class="collapse ps-4" id="collapseExample2">
-                      <a class="py-2 my-1" href="{{route('transaction.rent')}}">
+                      <a class="py-2 my-1" href="#">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Transaction</span>
                       </a>
