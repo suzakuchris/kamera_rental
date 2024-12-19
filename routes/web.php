@@ -163,17 +163,17 @@ Route::group(['middleware' => 'auth'], function(){
             Route::post('/delete', [ItemController::class, 'delete'])->name('master.item.delete');
         });
 
-        Route::group(['prefix' => 'customers'], function(){
-            Route::get('/', [CustomerController::class, 'index'])->name('master.customer');
-            Route::post('/search', [CustomerController::class, 'search'])->name('master.customer.search');
+        // Route::group(['prefix' => 'customers'], function(){
+        //     Route::get('/', [CustomerController::class, 'index'])->name('master.customer');
+        //     Route::post('/search', [CustomerController::class, 'search'])->name('master.customer.search');
             
-            Route::get('/view/{customer_id?}', [CustomerController::class, 'view'])->name('master.customer.view');
-            Route::get('/edit/{customer_id?}', [CustomerController::class, 'edit'])->name('master.customer.edit');
-            Route::get('/add', [CustomerController::class, 'add'])->name('master.customer.add');
+        //     Route::get('/view/{customer_id?}', [CustomerController::class, 'view'])->name('master.customer.view');
+        //     Route::get('/edit/{customer_id?}', [CustomerController::class, 'edit'])->name('master.customer.edit');
+        //     Route::get('/add', [CustomerController::class, 'add'])->name('master.customer.add');
 
-            Route::post('/upsert', [CustomerController::class, 'upsert'])->name('master.customer.upsert');
-            Route::post('/delete', [CustomerController::class, 'delete'])->name('master.customer.delete');
-        });
+        //     Route::post('/upsert', [CustomerController::class, 'upsert'])->name('master.customer.upsert');
+        //     Route::post('/delete', [CustomerController::class, 'delete'])->name('master.customer.delete');
+        // });
     });
 
     Route::group(['prefix' => 'transaction'], function(){
