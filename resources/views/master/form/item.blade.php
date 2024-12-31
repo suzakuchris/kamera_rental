@@ -47,7 +47,7 @@ Edit Item
                         <div class="form-group">
                             <label>Owner</label>
                             <select name="item_owner" class="select-searchable form-control" required>
-                                <option value="" disabled selected>--Pilih Tipe Produk--</option>
+                                <option value="" disabled selected>--Pilih Owner Produk--</option>
                                 <optgroup label="Mitra">
                                     @foreach($mitras as $mitra)
                                     <option value="{{'1'.$mitra->mitra_id}}" @if(old('item_owner') == '1'.$mitra->mitra_id || (isset($item) && $item->item_owner_type.$item->item_owner == '1'.$mitra->mitra_id)) selected @endif>{{$mitra->mitra_name}}</option>
@@ -81,6 +81,20 @@ Edit Item
                                 <option value="{{$stat->status_id}}" @if(old('item_status') == $stat->status_id || (isset($item) && $item->item_status == $stat->status_id)) selected @endif>{{$stat->status_name}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Harga per hari</label>
+                            <input type="text" placeholder="Harga sewa perhari" data-target="harga_per_hari" class="form-control comma-separated" name="harga_per_hari_show" required @if(old('harga_per_hari_show')) value="{{old('harga_per_hari_show')}}" @elseif(isset($item)) value="{{number_format($item->item_harga_perhari,0,'', ',')}}" @endif>
+                            <input type="hidden" name="harga_per_hari" id="harga_per_hari" @if(old('harga_per_hari')) value="{{old('harga_per_hari')}}" @elseif(isset($item)) value="{{$item->item_harga_perhari}}" @endif>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Harga perolehan</label>
+                            <input type="text" placeholder="Harga barang diperoleh" data-target="harga_perolehan" class="form-control comma-separated" name="harga_perolehan_show" required @if(old('harga_perolehan_show')) value="{{old('harga_perolehan_show')}}" @elseif(isset($item)) value="{{number_format($item->item_harga_perolehan,0,'', ',')}}" @endif>
+                            <input type="hidden" name="harga_perolehan" id="harga_perolehan" @if(old('harga_perolehan')) value="{{old('harga_perolehan')}}" @elseif(isset($item)) value="{{($item->item_harga_perolehan)}}" @endif>
                         </div>
                     </div>
                     <div class="col-12">

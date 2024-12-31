@@ -72,7 +72,7 @@ Produk - Item Inventory
                         </div>
                     </div>
                     <div class="col-auto pe-0">
-                        <a href="{{route('master.item.add', ['product_id' => $product->product_id])}}" target="FORM_PRODUCT" class="btn btn-primary">Add New</a>
+                        <a href="{{route('master.item.add', ['product_id' => $product->product_id])}}" class="btn btn-primary">Add New</a>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,8 @@ Produk - Item Inventory
             data    : {
                 'page':curr_page,
                 'max_row':max_row,
-                'search':search
+                'search':search,
+                'product_id':"{{$product->product_id}}"
             },
             success : function(msg) {
                 var rs = msg.data;

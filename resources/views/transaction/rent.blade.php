@@ -37,9 +37,12 @@
             <thead>
                 <tr>
                     <th class="auto-width">No.</th>
+                    <th>Kode Transaksi</th>
                     <th>Nama Nasabah</th>
                     <th>Nomor Rekening</th>
-                    <th>Bank</th>
+                    <th>Mulai Sewa</th>
+                    <th>Selesai Sewa</th>
+                    <th>Harga</th>
                     <th>Created</th>
                     <th>Updated</th>
                     <th class="auto-width">Action</th>

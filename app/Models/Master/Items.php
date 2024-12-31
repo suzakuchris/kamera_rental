@@ -15,4 +15,12 @@ class Items extends Model
     public function product(){
         return $this->hasOne(Product::class, 'product_id', 'product_id');
     }
+
+    public function getOwner(){
+        if($this->item_owner_type == 1){
+            return Mitra::find($this->item_owner);
+        }else{
+            return Customer::find($this->item_owner);
+        }
+    }
 }

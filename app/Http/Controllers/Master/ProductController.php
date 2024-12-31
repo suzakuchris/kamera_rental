@@ -146,8 +146,6 @@ class ProductController extends Controller
                 }
             }
 
-            // dd($image_to_keep);
-
             $discarding = Product_Image::where('product_id', $product->product_id)
             ->whereNotIn('image_id', $image_to_keep)
             ->get();

@@ -182,12 +182,33 @@ Route::group(['middleware' => 'auth'], function(){
             Route::post('/search', [TransactionController::class, 'search'])->name('transaction.rent.search');
 
             Route::get('/new', [TransactionController::class, 'add'])->name('transaction.rent.add');
+            Route::post('/get-item', [TransactionController::class, 'get_item'])->name('transaction.rent.item.get');
             Route::get('/view/{transaction_id?}', [TransactionController::class, 'view'])->name('transaction.rent.view');
             //print = ngelock
             Route::get('/print/{transaction_id?}', [TransactionController::class, 'print'])->name('transaction.rent.print');
 
             Route::post('/upsert', [TransactionController::class, 'upsert'])->name('transaction.rent.upsert');
             Route::post('/delete', [TransactionController::class, 'delete'])->name('transaction.rent.delete');
+
+            Route::group(['prefix' => 'payment'], function(){
+                Route::post('/search', [TransactionController::class, 'search_payment'])->name('transaction.rent.payment.search');
+                Route::post('/attachment', [TransactionController::class, 'search_payment_attachment'])->name('transaction.rent.payment.attachment');
+                Route::get('/add/{transaction_id}', [TransactionController::class, 'add_payment'])->name('transaction.rent.payment.add');
+                Route::post('/upsert', [TransactionController::class, 'upsert_payment'])->name('transaction.rent.payment.upsert');
+            });
+
+            Route::group(['prefix' => 'serah_terima'], function(){
+                Route::post('/search', [TransactionController::class, 'search_serah_terima'])->name('transaction.rent.serah_terima.search');
+                Route::post('/attachment', [TransactionController::class, 'search_serah_terima_attachment'])->name('transaction.rent.serah_terima.attachment');
+                Route::get('/add/{transaction_id}', [TransactionController::class, 'add_serah_terima'])->name('transaction.rent.serah_terima.add');
+                Route::post('/upsert', [TransactionController::class, 'upsert_serah_terima'])->name('transaction.rent.serah_terima.upsert');
+            });
+
+            Route::group(['prefix' => 'dosa'], function(){
+                Route::post('/search', [TransactionController::class, 'search_dosa'])->name('transaction.rent.dosa.search');
+                Route::get('/add/{transaction_id}', [TransactionController::class, 'add_dosa'])->name('transaction.rent.dosa.add');
+                Route::post('/upsert', [TransactionController::class, 'upsert_dosa'])->name('transaction.rent.dosa.upsert');
+            });
         });
     });
 });

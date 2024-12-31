@@ -96,8 +96,24 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        $(document).ready(function(){
+        function init_select(){
             $(".select-searchable").select2({ width: 'resolve' });
+        }
+
+        function makeid(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+            let counter = 0;
+            while (counter < length) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            counter += 1;
+            }
+            return result;
+        }
+
+        $(document).ready(function(){
+            init_select();
             @if(Session::has('error_message'))
                 Swal.fire({
                     icon: "error",
@@ -114,7 +130,7 @@
                 });
             @endif
 
-            $(".comma-separated").keyup(function(event) {                            
+            $(document).on("keyup", ".comma-separated", function(event) {                            
                 if(event.which >= 37 && event.which <= 40) return;
                 // format number
                 $(this).val(function(index, value) {                                                                  
@@ -122,27 +138,28 @@
                 });                                                  
             });
 
-            $(".comma-separated").blur(function (){    
+            $(document).on("blur", ".comma-separated", function(event) {
+            // $(".comma-separated").blur(function (){    
                 var val = this.value.replace(/,/g, "");
                 var target = $(this).attr('data-target');
                 target = $("#"+target);
 
                 if(this.value == 'NaN' || val < 0){
-                    $(this).val(0);
-                    target.val(0);
+                    $(this).val(0).trigger('change');
+                    target.val(0).trigger('change');
                 } else {
-                    target.val(val);
+                    target.val(val).trigger('change');
                 }
             });
-
-            function numberWithCommas(x) {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
         });
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     </script>
     @yield('js')
     @stack('js_stack')
     @yield('footer')
+    @yield('footer_stack')
     @include('components.common.loader')
 </body>
 </html>

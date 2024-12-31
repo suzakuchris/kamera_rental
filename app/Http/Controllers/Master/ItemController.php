@@ -55,6 +55,7 @@ class ItemController extends Controller
     }
 
     public function search_item(Request $req){
+        $product_id = $req->product_id;
         $qr_data = DB::table('items as a')
                 ->select(
                     'a.*', 'b.name', 'c.name', 'd.status_name', 'e.condition_name',
@@ -62,11 +63,15 @@ class ItemController extends Controller
                 )
                 ->leftJoin('users as b', 'a.created_by', 'b.id')
                 ->leftJoin('users as c', 'a.updated_by', 'c.id')
-                ->join('mst_status_item as d', 'a.item_status', 'd.status_id')
-                ->join('mst_condition_item as e', 'a.item_condition', 'e.condition_id')
+                ->leftJoin('mst_status_item as d', 'a.item_status', 'd.status_id')
+                ->leftJoin('mst_condition_item as e', 'a.item_condition', 'e.condition_id')
                 ->leftJoin('mst_customers as f', 'a.item_owner', 'f.customer_id')
                 ->leftJoin('mst_mitra as g', 'a.item_owner', 'g.mitra_id')
                 ->where('a.fg_aktif', 1);
+
+        if(isset($product_id)){
+            $qr_data = $qr_data->where('a.product_id', $product_id);
+        }
 
         if(isset($req->search)){
             $search = $req->search;
@@ -160,8 +165,11 @@ class ItemController extends Controller
             }
 
             $item->item_code = $req->item_code;
-            $item->item_owner = $req->item_owner;
+            $item->item_owner = substr($req->item_owner,1,strlen($req->item_owner));
+            $item->item_owner_type = substr($req->item_owner,0,1);
             $item->item_condition = $req->item_condition;
+            $item->item_harga_perhari = $req->harga_per_hari;
+            $item->item_harga_perolehan = $req->harga_perolehan;
             $item->item_status = $req->item_status;
             $item->item_notes = $req->item_notes;
 
