@@ -17,9 +17,11 @@
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
                         </div>
                     </div>
+                    @if(false)
                     <div class="col-12 col-md-auto">
                         <button class="btn btn-primary" onclick="add_new();">Add New</button>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
