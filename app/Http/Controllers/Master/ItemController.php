@@ -186,9 +186,19 @@ class ItemController extends Controller
     public function delete(Request $req){
         $item_id = $req->item_id;
 
+        $cek_transaksi = DB::table('transaction_detail')
+                         ->where('fg_aktif', 1)
+                         ->where('item_id', $item_id)
+                         ->first();
+
+        if(isset($cek_transaksi)){
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, item sudah memiliki transaksi"]));
+        }
+
         DB::beginTransaction();
         try{
-            $item = Item::find($item_id);
+            $item = Items::find($item_id);
             $item->fg_aktif = 0;
             $item->save();
 
