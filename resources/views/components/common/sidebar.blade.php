@@ -44,6 +44,7 @@
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Type</span>
                       </a>
+                      @if(false)
                       <a class="py-2 my-1" href="{{route('master.item_status')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Status</span>
@@ -52,6 +53,7 @@
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Condition</span>
                       </a>
+                      @endif
                       <a class="py-2 my-1" href="{{route('master.product')}}">
                           <i class='bi bi-arrow-return-right icon'></i>  
                           <span class="text nav-text">Product</span>
