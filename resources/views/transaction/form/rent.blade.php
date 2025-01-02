@@ -347,6 +347,7 @@ Update Transaction
             </div>
         </div>
     </fieldset>
+    @if(isset($header))
     <fieldset class="border p-2">
         @include('transaction.form.rent_payment', ["transaction_id" => $header->transaction_id])
     </fieldset>
@@ -356,6 +357,7 @@ Update Transaction
     <fieldset class="border p-2">
         @include('transaction.form.rent_dosa', ["transaction_id" => $header->transaction_id])
     </fieldset>
+    @endif
 </form>
 @endsection
 
