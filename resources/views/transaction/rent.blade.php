@@ -109,12 +109,12 @@
         var _curr_page = curr_page;
         var page = (_curr_page * max_row) - max_row;
         $.each(data, function(x,y){
-            var tgl_ambil = moment(y.transaction_tgl_ambil).format('DD MMM YYYY hh:mm:ss');
-            var tgl_return = moment(y.transaction_tgl_pemulangan).format('DD MMM YYYY hh:mm:ss');
-            var created = moment(y.created_at).format('DD MMM YYYY hh:mm:ss');
+            var tgl_ambil = moment(y.transaction_tgl_ambil).format('DD MMM YYYY');
+            var tgl_return = moment(y.transaction_tgl_pemulangan).format('DD MMM YYYY');
+            var created = moment(y.created_at).format('DD MMM YYYY HH:mm:ss');
             var updated = '-';
             if(y.updated_at){
-                updated = moment(y.updated_at).format('DD MMM YYYY hh:mm:ss');
+                updated = moment(y.updated_at).format('DD MMM YYYY HH:mm:ss');
             }
             rows += `
                 <tr>
