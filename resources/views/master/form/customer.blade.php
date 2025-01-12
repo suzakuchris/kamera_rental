@@ -60,6 +60,16 @@ Edit Customer
                             <textarea class="form-control" name="customer_address" rows="4">@if(old('customer_address')) {{old('customer_address')}} @elseif(isset($customer)) {{$customer->customer_address}} @endif</textarea>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Suffix Code</label>
+                            @if($mode != 'add')
+                            <input type="text" class="form-control" readonly placeholder="Masukan kode unik customer" @if(old('code')) value="{{old('code')}}" @elseif(isset($customer)) value="{{$customer->suffix_code}}" @endif>
+                            @else
+                            <input type="text" name="code" class="form-control" required placeholder="Masukan kode unik customer" @if(old('code')) value="{{old('code')}}" @elseif(isset($customer)) value="{{$customer->suffix_code}}" @endif>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

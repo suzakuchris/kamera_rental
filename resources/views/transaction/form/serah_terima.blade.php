@@ -1,6 +1,11 @@
 <div class="row">
     <div class="col-12">
-        <td><h5>History Serah Terima</h5></td>
+        <td>
+            <div class="row mx-0 my-2">
+                <div class="col-auto"><h5>History Serah Terima</h5></div>
+                <div class="col-auto"><a href="{{route('transaction.rent.serah_terima.view', ['transaction_id' => $transaction_id])}}" class="btn btn-sm btn-outline-primary">See More</a></div>
+            </div>
+        </td>
     </div>
     <div class="col-12">
         <div id="serah_terima_container" class="card-container">

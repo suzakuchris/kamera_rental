@@ -97,7 +97,8 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         function init_select(){
-            $(".select-searchable").select2({ width: 'resolve' });
+            $(".select-searchable:not(.inventory_select)").select2({ width: 'resolve' });
+            $(".select-searchable.inventory_select").select2({ width: '100%' });
         }
 
         function makeid(length) {

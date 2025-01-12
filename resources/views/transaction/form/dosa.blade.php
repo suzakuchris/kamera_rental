@@ -58,11 +58,18 @@ Edit Payment
 
 @section('content')
 <form method="POST" action="{{route('transaction.rent.dosa.upsert')}}" onsubmit="pre_submit(event, this);">
-    <fieldset class="border p-2">
+    <fieldset class="border p-2" @if($mode=='view') disabled @endif>
         {{ csrf_field() }}
         <input type="hidden" name="header_id" @if(isset($dosa)) value="{{$dosa->header_id}}" @endif>
         <input type="hidden" name="transaction_id" @if(isset($transaction)) value="{{$transaction->transaction_id}}" @endif>
-        <legend class="w-auto">Data Dosa</legend>
+        <legend class="w-auto">
+            @if($mode == 'view')
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.dosa.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @else
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @endif 
+            Data Dosa
+        </legend>
         <div class="row mx-0">
             <div class="col-12">
                 @if(isset($errors) && count($errors->all()) > 0)
@@ -108,13 +115,13 @@ Edit Payment
                             <tr>
                                 <td>Tanggal Serah/Terima</td>
                                 <td>
-                                    <input type="datetime-local" name="tanggal_dosa" class="form-control" required>
+                                    <input type="datetime-local" name="tanggal_dosa" class="form-control" required @if(isset($dosa)) value="{{datetime_stamp($dosa->header_datetime)}}" @endif>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Keterangan</td>
                                 <td>
-                                    <textarea class="form-control" rows="4" name="keterangan" required></textarea>
+                                    <textarea class="form-control" rows="4" name="keterangan" required>@if(isset($dosa)){{$dosa->header_notes}}@endif</textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -138,6 +145,14 @@ Edit Payment
                                                 $bundle_unique_code = [];
                                             @endphp
                                             @foreach($transaction->details as $detail)
+                                            @if($mode == 'view' && !item_in_detail($dosa, $detail))
+                                                @continue
+                                            @endif
+                                            @if($mode == 'view')
+                                                @php
+                                                    $filled_detail = item_in_detail($dosa, $detail, true);
+                                                @endphp
+                                            @endif
                                             @if($detail->item_bundle == 1)
                                                 @if(!isset($detail->item_id))
                                                 @php
@@ -171,7 +186,7 @@ Edit Payment
                                                         <input type="hidden" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][product_id]" value="{{$detail->product->product_id}}">
                                                     </td>
                                                     <td class="text-center" style="vertical-align:middle;">
-                                                        <input onclick="disable_row(this);" class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][included]">
+                                                        <input @if(isset($dosa) && item_in_detail($dosa, $detail)) checked @endif onclick="disable_row(this);" class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][included]">
                                                     </td>
                                                     <td>
                                                         <div>{{$detail->product->product_name}}</div>
@@ -204,75 +219,87 @@ Edit Payment
                                                         <select class="form-control" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][dosa_status]" disabled>
                                                             <option value="">--Pilih Status Dosa--</option>
                                                             @foreach($item_status as $is)
-                                                                <option value="{{$is->condition_id}}">{{$is->condition_name}}</option>
+                                                                <option value="{{$is->condition_id}}" @if(isset($filled_detail) && $filled_detail->dosa_type_id == $is->condition_id) selected @endif>{{$is->condition_name}}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <textarea class="form-control" rows="2" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][dosa_notes]" disabled></textarea>
+                                                        <textarea class="form-control" rows="2" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][dosa_notes]" disabled>@if(isset($filled_detail)){{$filled_detail->dosa_reason}}@endif</textarea>
                                                     </td>
                                                     <td style="vertical-align:middle;">
+                                                        @if(isset($filled_detail))
+                                                            @foreach($filled_detail->images as $i)
+                                                            <img style="width:100px;height:auto;max-height:200px;" src="{{asset($i->image_path.$i->image_name)}}">
+                                                            @endforeach
+                                                        @else
                                                         <input accept="image/*" type="file" class="form-control imageinput" disabled>
                                                         <input type="text" class="d-none base64input" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][dosa_lampiran]" disabled>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endif
                                             @else
-                                            @php
-                                                $unique_row = uniqid();
-                                            @endphp
-                                            <tr>
-                                                <td>
-                                                    <input type="hidden" name="details_keep[{{$unique_row}}][transaction_detail_id]" value="{{$detail->transaction_detail_id}}">
-                                                    <input type="hidden" name="details_keep[{{$unique_row}}][product_type]" value="product">
-                                                    <input type="hidden" name="details_keep[{{$unique_row}}][product_id]" value="{{$detail->product->product_id}}">
-                                                </td>
-                                                <td class="text-center" style="vertical-align:middle;">
-                                                    <input onclick="disable_row(this);" class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][included]">
-                                                </td>
-                                                <td>
-                                                    <div>{{$detail->product->product_name}}</div>
-                                                    <div class="small text-muted">{{$detail->product->brand->product_brand_name}}</div>
-                                                    <div class="small text-muted">
-                                                        @php
-                                                            $item_collections = $detail->product->available_items_except($detail->item_id);
-                                                        @endphp
-                                                        @foreach($item_collections as $itema)
-                                                        @php
-                                                            $owner = $itema->getOwner();
-                                                            if($itema->item_owner_type == 1){
-                                                                $owner_name = $owner->mitra_name;
-                                                            }else{
-                                                                $owner_name = $owner->customer_name;
-                                                            }
-                                                            
-                                                            $selected = '';
-                                                            if($itema->item_id == $detail->item_id){
-                                                                $selected = 'selected';
-                                                            }
-                                                        @endphp
-                                                        @if($selected)
-                                                            {{$itema->item_code}} - {{$owner_name}}
+                                                @php
+                                                    $unique_row = uniqid();
+                                                @endphp
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="details_keep[{{$unique_row}}][transaction_detail_id]" value="{{$detail->transaction_detail_id}}">
+                                                        <input type="hidden" name="details_keep[{{$unique_row}}][product_type]" value="product">
+                                                        <input type="hidden" name="details_keep[{{$unique_row}}][product_id]" value="{{$detail->product->product_id}}">
+                                                    </td>
+                                                    <td class="text-center" style="vertical-align:middle;">
+                                                        <input @if(isset($dosa) && item_in_detail($dosa, $detail)) checked @endif onclick="disable_row(this);" class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][included]">
+                                                    </td>
+                                                    <td>
+                                                        <div>{{$detail->product->product_name}}</div>
+                                                        <div class="small text-muted">{{$detail->product->brand->product_brand_name}}</div>
+                                                        <div class="small text-muted">
+                                                            @php
+                                                                $item_collections = $detail->product->available_items_except($detail->item_id);
+                                                            @endphp
+                                                            @foreach($item_collections as $itema)
+                                                            @php
+                                                                $owner = $itema->getOwner();
+                                                                if($itema->item_owner_type == 1){
+                                                                    $owner_name = $owner->mitra_name;
+                                                                }else{
+                                                                    $owner_name = $owner->customer_name;
+                                                                }
+                                                                
+                                                                $selected = '';
+                                                                if($itema->item_id == $detail->item_id){
+                                                                    $selected = 'selected';
+                                                                }
+                                                            @endphp
+                                                            @if($selected)
+                                                                {{$itema->item_code}} - {{$owner_name}}
+                                                            @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align:middle;">
+                                                        <select class="form-control" name="details_keep[{{$unique_row}}][dosa_status]" disabled>
+                                                            <option value="">--Pilih Status Dosa--</option>
+                                                            @foreach($item_status as $is)
+                                                                <option value="{{$is->condition_id}}" @if(isset($filled_detail) && $filled_detail->dosa_type_id == $is->condition_id) selected @endif>{{$is->condition_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <textarea class="form-control" rows="2" name="details_keep[{{$unique_row}}][dosa_notes]" disabled>@if(isset($filled_detail)){{$filled_detail->dosa_reason}}@endif</textarea>
+                                                    </td>
+                                                    <td style="vertical-align:middle;">
+                                                        @if(isset($filled_detail))
+                                                            @foreach($filled_detail->images as $i)
+                                                            <img style="width:100px;height:auto;max-height:200px;" src="{{asset($i->image_path.$i->image_name)}}">
+                                                            @endforeach
+                                                        @else
+                                                        <input accept="image/*" type="file" class="form-control imageinput" disabled>
+                                                        <input type="text" class="d-none base64input" name="details_keep[{{$unique_row}}][dosa_lampiran]" disabled>
                                                         @endif
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                                <td style="vertical-align:middle;">
-                                                    <select class="form-control" name="details_keep[{{$unique_row}}][dosa_status]" disabled>
-                                                        <option value="">--Pilih Status Dosa--</option>
-                                                        @foreach($item_status as $is)
-                                                            <option value="{{$is->condition_id}}">{{$is->condition_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <textarea class="form-control" rows="2" name="details_keep[{{$unique_row}}][dosa_notes]" disabled></textarea>
-                                                </td>
-                                                <td style="vertical-align:middle;">
-                                                    <input accept="image/*" type="file" class="form-control imageinput" disabled>
-                                                    <input type="text" class="d-none base64input" name="details_keep[{{$unique_row}}][dosa_lampiran]" disabled>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                </tr>
                                             @endif
                                             @endforeach
                                         </tbody>
@@ -290,12 +317,14 @@ Edit Payment
 @endsection
 
 @section('content_footer')
+@if($mode != 'view')
 <div class="row mx-0">
     <div class="col"></div>
     <div class="col-auto">
         <label for="SubmitBtn" class="btn btn-success"><i class="bi bi-save me-2"></i>Save</label>
     </div>
 </div>
+@endif
 @endsection
 
 @section('js')

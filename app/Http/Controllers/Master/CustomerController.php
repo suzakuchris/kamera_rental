@@ -87,6 +87,18 @@ class CustomerController extends Controller
             }else{
                 $customer = Customer::find($req->customer_id);
                 $customer->updated_by = Auth::user()->id;
+                //cek code
+                if(!isset($req->code)){
+                    throw new Exception('Customer Code harus diisi');
+                }
+                if(len($req->code) > 50){
+                    throw new Exception('Customer Code terlalu panjang!');
+                }
+                $qr_cek = Customer::where('fg_aktif', 1)->where('suffix_code', $req->code)->first();
+                if(isset($qr_cek)){
+                    throw new Exception('Customer Code sudah ada di database');
+                }
+                $customer->suffix_code = $req->code;
             }
 
             $customer->customer_name = $req->customer_name;

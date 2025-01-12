@@ -11,4 +11,8 @@ class Dosa_Detail extends Model
     protected $table = 'tbl_dosa_detail';
     protected $primaryKey = 'id';
     public $incrementing = true;
+
+    public function images(){
+        return $this->hasMany(Dosa_Attachment::class, 'detail_id', 'id');
+    }
 }

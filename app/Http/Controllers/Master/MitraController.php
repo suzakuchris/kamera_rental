@@ -82,6 +82,18 @@ class MitraController extends Controller
             }else{
                 $mitra = Mitra::find($req->mitra_id);
                 $mitra->updated_by = Auth::user()->id;
+                //cek code
+                if(!isset($req->code)){
+                    throw new Exception('Mitra Code harus diisi');
+                }
+                if(len($req->code) > 50){
+                    throw new Exception('Mitra Code terlalu panjang!');
+                }
+                $qr_cek = Mitra::where('fg_aktif', 1)->where('suffix_code', $req->code)->first();
+                if(isset($qr_cek)){
+                    throw new Exception('Mitra Code sudah ada di database');
+                }
+                $mitra->suffix_code = $req->code;
             }
 
             $mitra->mitra_name = $req->mitra_name;

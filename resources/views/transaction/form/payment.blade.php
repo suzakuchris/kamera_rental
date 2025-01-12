@@ -38,11 +38,18 @@ Edit Payment
 
 @section('content')
 <form method="POST" action="{{route('transaction.rent.payment.upsert')}}" onsubmit="pre_submit(event, this);">
-    <fieldset class="border p-2">
+    <fieldset class="border p-2" @if($mode=='view') disabled @endif>
         {{ csrf_field() }}
         <input type="hidden" name="entry_id" @if(isset($entry)) value="{{$entry->entry_id}}" @endif>
         <input type="hidden" name="transaction_id" @if(isset($transaction)) value="{{$transaction->transaction_id}}" @endif>
-        <legend class="w-auto">Data Payment</legend>
+        <legend class="w-auto">
+            @if($mode == 'view')
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.payment.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @else
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @endif 
+            Data Payment
+        </legend>
         <div class="row mx-0">
             <div class="col-12">
                 @if(isset($errors) && count($errors->all()) > 0)
@@ -88,14 +95,14 @@ Edit Payment
                             <tr>
                                 <td>Nominal</td>
                                 <td>
-                                    <input type="text" placeholder="Jumlah Bayar" data-target="jumlah_bayar" class="form-control comma-separated" name="jumlah_bayar_show" required @if(isset($entry)) @if($entry->entry_cashflow == 1) value="{{comma_separated($entry->entry_debit)}}" @else value="{{comma_separated($entry->entry_credit)}}" @endif @endif>
-                                    <input type="hidden" name="jumlah_bayar" id="jumlah_bayar" class="jumlah_bayar" required @if(isset($entry)) @if($entry->entry_cashflow == 1) value="{{($entry->entry_debit)}}" @else value="{{($entry->entry_credit)}}" @endif @endif>
+                                    <input type="text" placeholder="Jumlah Bayar" data-target="jumlah_bayar" class="form-control comma-separated" name="jumlah_bayar_show" required @if(isset($entry)) @if($entry->entry_cashflow == 0) value="{{comma_separated($entry->entry_debit)}}" @else value="{{comma_separated($entry->entry_credit)}}" @endif @endif>
+                                    <input type="hidden" name="jumlah_bayar" id="jumlah_bayar" class="jumlah_bayar" required @if(isset($entry)) @if($entry->entry_cashflow == 0) value="{{($entry->entry_debit)}}" @else value="{{($entry->entry_credit)}}" @endif @endif>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Tanggal Payment</td>
                                 <td>
-                                    <input type="datetime-local" name="tanggal_payment" class="form-control" required @if(isset($entry)) value="{{$entry->entry_date}}" @endif>
+                                    <input type="datetime-local" name="tanggal_payment" class="form-control" required @if(isset($entry)) value="{{datetime_stamp($entry->entry_date)}}" @endif>
                                 </td>
                             </tr>
                             <tr>
@@ -129,11 +136,13 @@ Edit Payment
                                                         </div>
                                                     </td>
                                                     <td>
+                                                        @if($mode != 'view')
                                                         <div class="btn-group">
                                                             <button type="button" onclick="move_up(this);" class="btn btn-primary btn-up"><i class="bi bi-arrow-up"></i></button>
                                                             <button type="button" onclick="move_down(this);" class="btn btn-primary btn-down"><i class="bi bi-arrow-down"></i></button>
                                                             <button type="button" onclick="remove(this);" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></button>
                                                         </div>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -168,12 +177,14 @@ Edit Payment
 @endsection
 
 @section('content_footer')
+@if($mode != 'view')
 <div class="row mx-0">
     <div class="col"></div>
     <div class="col-auto">
         <label for="SubmitBtn" class="btn btn-success"><i class="bi bi-save me-2"></i>Save</label>
     </div>
 </div>
+@endif
 @endsection
 
 @section('js')

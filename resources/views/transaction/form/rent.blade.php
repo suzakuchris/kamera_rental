@@ -117,6 +117,7 @@ Update Transaction
                         <tr>
                             <td colspan="9"><h5>Alat yang Disewa</h5></td>
                         </tr>
+                        @if(!isset($header))
                         <tr>
                             <td colspan="9">
                                 <div class="input-group mb-1 flex-nowrap">
@@ -138,6 +139,7 @@ Update Transaction
                                 </div>
                             </td>
                         </tr>
+                        @endif
                         <tr>
                             <td>No.</td>
                             <td>Nama Alat</td>
@@ -188,9 +190,11 @@ Update Transaction
                                     <input type="text" class="form-control subtotal" disabled readonly @if($mode == "add") value="0" @else value="{{comma_separated($detail->item_price)}}" @endif>
                                     </td>
                                     <td></td>
+                                    @if(false)
                                     <td>
                                         <a @if($detail->returned_all()) disabled @endif class="btn btn-danger btn-sm" onclick="remove_bundle_row(this, 'detail-bundle-{{$detail->item_parent_id}}');"><i class="bi bi-trash"></i></a>
                                     </td>
+                                    @endif
                                 </tr>
                                 @else
                                 @php
@@ -210,7 +214,7 @@ Update Transaction
                                     <td>{{$detail->product->product_name}}</td>
                                     <td>{{$detail->product->brand->product_brand_name}}</td>
                                     <td>
-                                        <select class="form-control select-searchable inventory_select" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][product_item]" onchange="calculate_pricing(this);">
+                                        <select class="form-control select-searchable inventory_select w-100" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][product_item]" onchange="calculate_pricing(this);">
                                             <option value="">--Pilih Barang--</option>
                                             @php
                                                 $item_collections = $detail->product->available_items_except($detail->item_id);
@@ -253,7 +257,7 @@ Update Transaction
                                 <td>{{$detail->product->product_name}}</td>
                                 <td>{{$detail->product->brand->product_brand_name}}</td>
                                 <td>
-                                    <select class="form-control select-searchable inventory_select" name="details_keep[{{$unique_row}}][product_item]" onchange="calculate_pricing(this);">
+                                    <select class="form-control select-searchable inventory_select w-100" name="details_keep[{{$unique_row}}][product_item]" onchange="calculate_pricing(this);">
                                         <option value="">--Pilih Barang--</option>
                                         @php
                                             $item_collections = $detail->product->available_items_except($detail->item_id);
@@ -289,9 +293,11 @@ Update Transaction
                                 <td class="text-center">
                                     <input type="checkbox" disabled>
                                 </td>
+                                @if(false)
                                 <td>
                                     <a @if(($detail->item_return) == 1) disabled @endif class="btn btn-danger btn-sm" onclick="remove_row(this);"><i class="bi bi-trash"></i></a>
                                 </td>
+                                @endif
                             </tr>
                             @endif
                             @endforeach
@@ -335,12 +341,14 @@ Update Transaction
                             </td>
                             <td colspan="2"></td>
                         </tr>
+                        @if(false)
                         @if($mode != 'add')
                         <tr>
                             <td class="text-end" colspan="9">
                                 <label for="SubmitBtn" class="ms-3 btn btn-success"><i class="bi bi-save me-2"></i>Save</label>
                             </td>
                         </tr>
+                        @endif
                         @endif
                     </tfoot>
                 </table>
@@ -396,6 +404,12 @@ Update Transaction
                 }
             });
         });
+
+        @if(isset($header))
+        $("form input").attr('disabled', true);
+        $("form textarea").attr('disabled', true);
+        $("form .inventory_select").select2("enable", false)
+        @endif
     });
 
     function recalculate(){
@@ -530,7 +544,7 @@ Update Transaction
                 <td>`+data.product_name+`</td>
                 <td>`+data.brand.product_brand_name+`</td>
                 <td>
-                    <select class="form-control select-searchable inventory_select" name="details[`+unique_row+`][product_item]" onchange="calculate_pricing(this);">
+                    <select class="form-control select-searchable inventory_select w-100" name="details[`+unique_row+`][product_item]" onchange="calculate_pricing(this);">
                         <option value="">--Pilih Barang--</option>
                         `+options+`
                     </select>
@@ -616,7 +630,7 @@ Update Transaction
                     <td>`+y.product.product_name+`</td>
                     <td>`+y.product.brand.product_brand_name+`</td>
                     <td>
-                        <select class="form-control select-searchable inventory_select" name="details[`+unique_row+`][details][`+unique_row_detail+`][product_item]" onchange="calculate_pricing(this);">
+                        <select class="form-control select-searchable w-100 inventory_select" name="details[`+unique_row+`][details][`+unique_row_detail+`][product_item]" onchange="calculate_pricing(this);">
                             <option value="">--Pilih Barang--</option>
                             `+options+`
                         </select>

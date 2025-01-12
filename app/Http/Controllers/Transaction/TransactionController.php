@@ -187,7 +187,8 @@ class TransactionController extends Controller
         try{
             if(!isset($req->transaction_id)){
                 $header = new Header();
-                $header->transaction_number = get_transaction_number();
+                $_cust = Customer::find($req->customer_id);
+                $header->transaction_number = get_transaction_number($_cust->suffix_code);
                 $header->transaction_customer = $req->customer_id;
                 $header->transaction_rekening = $req->rekening_id;
                 $header->created_by = $user;
@@ -434,7 +435,8 @@ class TransactionController extends Controller
                     ->leftJoin('users as c', 'a.updated_by', 'c.id')
                     ->orderBy('a.entry_date', 'desc')
                     ->orderBy('a.created_at', 'desc')
-                    ->where('a.entry_trx_id', $req->transaction_id);
+                    ->where('a.entry_trx_id', $req->transaction_id)
+                    ->where('a.fg_aktif', 1);
 
         if(isset($req->search)){
             $search = $req->search;
@@ -443,11 +445,18 @@ class TransactionController extends Controller
             });
         }
         
-        $qrData = $qr_data->get(3);
+        if(!isset($req->page)){
+            $qrData = $qr_data->get(3);
+            $data['data'] = $qrData;
+            return json_encode($data);
+        }else{
+            $qrData = $qr_data->paginate($req->max_row);
 
-        $data['data'] = $qrData;
-        
-        return json_encode($data);
+            $data['data'] = $qrData;
+            $data['pagination'] =  (string) $qrData->links();
+
+            return json_encode($data);
+        }
     }
 
     public function add_payment(Request $req){
@@ -563,7 +572,8 @@ class TransactionController extends Controller
                     ->leftJoin('users as c', 'a.updated_by', 'c.id')
                     ->orderBy('a.header_datetime', 'desc')
                     ->orderBy('a.created_at', 'desc')
-                    ->where('a.header_transaction_id', $req->transaction_id);
+                    ->where('a.header_transaction_id', $req->transaction_id)
+                    ->where('a.fg_aktif', 1);
 
         if(isset($req->search)){
             $search = $req->search;
@@ -572,7 +582,11 @@ class TransactionController extends Controller
             });
         }
         
-        $qrData = $qr_data->get(3);
+        if(!isset($req->page)){
+            $qrData = $qr_data->get(3);
+        }else{
+            $qrData = $qr_data->paginate($req->max_row);
+        }
 
         foreach($qrData as $qr){
             $qr->details = DB::table('tbl_dosa_detail as a')
@@ -592,9 +606,15 @@ class TransactionController extends Controller
                             ->get();
         }
 
-        $data['data'] = $qrData;
-        
-        return json_encode($data);
+        if(!isset($req->page)){
+            $data['data'] = $qrData;
+            return json_encode($data);
+        }else{
+            $data['data'] = $qrData;
+            $data['pagination'] =  (string) $qrData->links();
+
+            return json_encode($data);
+        }
     }
 
     public function add_dosa(Request $req){
@@ -738,7 +758,8 @@ class TransactionController extends Controller
                     ->leftJoin('users as c', 'a.updated_by', 'c.id')
                     ->orderBy('a.header_datetime', 'desc')
                     ->orderBy('a.created_at', 'desc')
-                    ->where('a.header_transaction_id', $req->transaction_id);
+                    ->where('a.header_transaction_id', $req->transaction_id)
+                    ->where('a.fg_aktif', 1);
 
         if(isset($req->search)){
             $search = $req->search;
@@ -746,8 +767,12 @@ class TransactionController extends Controller
                 $query->where('a.header_notes', 'like', '%'.$search.'%');
             });
         }
-        
-        $qrData = $qr_data->get(3);
+
+        if(!isset($req->page)){
+            $qrData = $qr_data->get(3);
+        }else{
+            $qrData = $qr_data->paginate($req->max_row);
+        }
 
         foreach($qrData as $qr){
             $qr->details = DB::table('serah_terima_detail as a')
@@ -769,9 +794,15 @@ class TransactionController extends Controller
                             ->get();
         }
 
-        $data['data'] = $qrData;
-        
-        return json_encode($data);
+        if(!isset($req->page)){
+            $data['data'] = $qrData;
+            return json_encode($data);
+        }else{
+            $data['data'] = $qrData;
+            $data['pagination'] =  (string) $qrData->links();
+
+            return json_encode($data);
+        }
     }
 
     public function search_serah_terima_attachment(Request $req){
@@ -921,4 +952,119 @@ class TransactionController extends Controller
         }
     }
 
+
+    // =====================================================
+
+    public function payment_index(Request $req){
+        $data['transaction_id'] = $req->transaction_id;
+        return view('transaction.payment', $data);
+    }
+
+    public function payment_search(Request $req){
+        return $this->search_payment($req);
+    }
+
+    public function payment_detail(Request $req){
+        $data['entry'] = Accounting_Entry::find($req->entry_id);
+        $data['mode'] = 'view';
+        $data['transaction_id'] = $req->transaction_id;
+        $data['transaction'] = Header::find($req->transaction_id);
+        return view('transaction.form.payment', $data);
+    }
+
+    public function payment_delete(Request $req){
+        $entry_id = $req->entry_id;
+
+        DB::beginTransaction();
+        try{
+            $entry = Accounting_Entry::find($entry_id);
+            $entry->fg_aktif = 0;
+            $entry->save();
+
+            DB::commit();
+            http_response_code(200);
+            exit(json_encode(['Message' => 'Data berhasil dihapus']));
+        }catch(Exception $e){
+            DB::rollback();
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+        }
+    }
+
+    // =====================================================
+
+    public function serah_terima_index(Request $req){
+        $data['transaction_id'] = $req->transaction_id;
+        return view('transaction.serah_terima', $data);
+    }
+
+    public function serah_terima_search(Request $req){
+        return $this->search_serah_terima($req);
+    }
+
+    public function serah_terima_detail(Request $req){
+        $data['serah_terima'] = Serah_Terima::find($req->header_id);
+        $data['mode'] = 'view';
+        $data['transaction_id'] = $req->transaction_id;
+        $data['transaction'] = Header::find($req->transaction_id);
+        return view('transaction.form.serah_terima_form', $data);
+    }
+
+    public function serah_terima_delete(Request $req){
+        $header_id = $req->header_id;
+
+        DB::beginTransaction();
+        try{
+            $entry = Serah_Terima::find($header_id);
+            $entry->fg_aktif = 0;
+            $entry->save();
+
+            DB::commit();
+            http_response_code(200);
+            exit(json_encode(['Message' => 'Data berhasil dihapus']));
+        }catch(Exception $e){
+            DB::rollback();
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+        }
+    }
+
+    // =====================================================
+
+    public function dosa_index(Request $req){
+        $data['transaction_id'] = $req->transaction_id;
+        return view('transaction.dosa', $data);
+    }
+
+    public function dosa_search(Request $req){
+        return $this->search_dosa($req);
+    }
+
+    public function dosa_detail(Request $req){
+        $data['dosa'] = Dosa::find($req->header_id);
+        $data['mode'] = 'view';
+        $data['transaction_id'] = $req->transaction_id;
+        $data['transaction'] = Header::find($req->transaction_id);
+        $data['item_status'] = Condition::where('fg_aktif', 1)->get();
+        return view('transaction.form.dosa', $data);
+    }
+
+    public function dosa_delete(Request $req){
+        $header_id = $req->header_id;
+
+        DB::beginTransaction();
+        try{
+            $entry = Dosa::find($header_id);
+            $entry->fg_aktif = 0;
+            $entry->save();
+
+            DB::commit();
+            http_response_code(200);
+            exit(json_encode(['Message' => 'Data berhasil dihapus']));
+        }catch(Exception $e){
+            DB::rollback();
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+        }
+    }
 }

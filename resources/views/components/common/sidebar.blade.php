@@ -32,17 +32,41 @@
                       </a>
                     </div>
                     <div class="collapse ps-4" id="collapseExample">
-                      <a class="py-2 my-1" href="{{route('master.rekening')}}">
-                          <i class='bi bi-wallet icon'></i>  
-                          <span class="text nav-text">Rekening</span>
-                      </a>
                       <a class="py-2 my-1" href="{{route('master.product_brands')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Brand</span>
+                          <i class='bi bi-camera icon'></i>  
+                          <span class="text nav-text">Merek</span>
                       </a>
                       <a class="py-2 my-1" href="{{route('master.product_types')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Type</span>
+                          <i class='bi bi-battery-full icon'></i>  
+                          <span class="text nav-text">Kategori</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.product')}}">
+                          <i class='bi bi-camera-reels-fill icon'></i>  
+                          <span class="text nav-text">Produk</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.product_bundle')}}">
+                          <i class='bi bi-inboxes-fill icon'></i>  
+                          <span class="text nav-text">Paket Sewa</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.item')}}">
+                          <i class='bi bi-clipboard-fill icon'></i>  
+                          <span class="text nav-text">Inventory</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.users')}}">
+                          <i class='bi bi-person-badge icon'></i>  
+                          <span class="text nav-text">Akun</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.customer')}}">
+                          <i class='bi bi-people-fill icon'></i>  
+                          <span class="text nav-text">Customer</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.mitra')}}">
+                          <i class='bi bi-file-earmark-fill icon'></i>  
+                          <span class="text nav-text">Mitra</span>
+                      </a>
+                      <a class="py-2 my-1" href="{{route('master.rekening')}}">
+                          <i class='bi bi-piggy-bank icon'></i>  
+                          <span class="text nav-text">Rekening</span>
                       </a>
                       @if(false)
                       <a class="py-2 my-1" href="{{route('master.item_status')}}">
@@ -54,42 +78,18 @@
                           <span class="text nav-text">Condition</span>
                       </a>
                       @endif
-                      <a class="py-2 my-1" href="{{route('master.product')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Product</span>
-                      </a>
-                      <a class="py-2 my-1" href="{{route('master.product_bundle')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Bundle</span>
-                      </a>
-                      <a class="py-2 my-1" href="{{route('master.item')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Inventory</span>
-                      </a>
-                      <a class="py-2 my-1" href="{{route('master.users')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">User</span>
-                      </a>
-                      <a class="py-2 my-1" href="{{route('master.customer')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Customer</span>
-                      </a>
-                      <a class="py-2 my-1" href="{{route('master.mitra')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
-                          <span class="text nav-text">Mitra</span>
-                      </a>
                     </div>
                   </li>
                   <li class="nav-link row">
                     <div class="col-12">
                       <a class="py-2" href="#master" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
-                          <i class='bi bi-minecart-loaded icon'></i>
+                          <i class='bi bi-cart-fill icon'></i>
                           <span class="text nav-text">Operation</span>
                       </a>
                     </div>
                     <div class="collapse ps-4" id="collapseExample2">
                       <a class="py-2 my-1" href="{{route('transaction.rent')}}">
-                          <i class='bi bi-arrow-return-right icon'></i>  
+                          <i class='bi bi-cart-plus-fill icon'></i>  
                           <span class="text nav-text">Transaction</span>
                       </a>
                     </div>

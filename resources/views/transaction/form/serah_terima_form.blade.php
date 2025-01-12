@@ -58,11 +58,18 @@ Edit Payment
 
 @section('content')
 <form method="POST" action="{{route('transaction.rent.serah_terima.upsert')}}" onsubmit="pre_submit(event, this);">
-    <fieldset class="border p-2">
+    <fieldset class="border p-2" @if($mode == 'view') disabled @endif>
         {{ csrf_field() }}
         <input type="hidden" name="header_id" @if(isset($serah_terima)) value="{{$serah_terima->header_id}}" @endif>
         <input type="hidden" name="transaction_id" @if(isset($transaction)) value="{{$transaction->transaction_id}}" @endif>
-        <legend class="w-auto">Data Serah Terima</legend>
+        <legend class="w-auto">
+            @if($mode == 'view')
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.serah_terima.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @else
+                <a class="bi bi-chevron-left me-2" href="{{route('transaction.rent.view', ['transaction_id' => $transaction->transaction_id])}}"></a>
+            @endif 
+            Data Serah Terima
+        </legend>
         <div class="row mx-0">
             <div class="col-12">
                 @if(isset($errors) && count($errors->all()) > 0)
@@ -110,21 +117,21 @@ Edit Payment
                                 <td>
                                     <select class="form-control" name="serah_terima_status" onchange="disable_some(this);" required>
                                         <option value="">--Pilih Status--</option>
-                                        <option value="1">Serah</option>
-                                        <option value="2">Terima</option>
+                                        <option value="1" @if(isset($serah_terima) && $serah_terima->header_status == 1) selected @endif>Serah</option>
+                                        <option value="2" @if(isset($serah_terima) && $serah_terima->header_status == 2) selected @endif>Terima</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Tanggal Serah/Terima</td>
                                 <td>
-                                    <input type="datetime-local" name="tanggal_serah_terima" class="form-control" required>
+                                    <input type="datetime-local" name="tanggal_serah_terima" class="form-control" required @if(isset($serah_terima)) value="{{datetime_stamp($serah_terima->header_datetime)}}" @endif>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Keterangan</td>
                                 <td>
-                                    <textarea class="form-control" rows="4" name="keterangan" required></textarea>
+                                    <textarea class="form-control" rows="4" name="keterangan" required>@if(isset($serah_terima)){{$serah_terima->header_notes}}@endif</textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -203,7 +210,7 @@ Edit Payment
                                                         @endforeach
                                                     </td>
                                                     <td class="text-center">
-                                                        <input class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][included]">
+                                                        <input class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][details][{{$detail_numbering}}][included]" @if(isset($serah_terima)) @if(in_details($serah_terima, $detail->transaction_detail_id)) checked @endif @endif>
                                                     </td>
                                                 </tr>
                                                 @endif
@@ -243,7 +250,7 @@ Edit Payment
                                                     @endforeach
                                                 </td>
                                                 <td class="text-center">
-                                                    <input class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][included]">
+                                                    <input class="checkbox_{{$detail->item_return}}" type="checkbox" name="details_keep[{{$unique_row}}][included]" @if(isset($serah_terima)) @if(in_details($serah_terima, $detail->transaction_detail_id)) checked @endif @endif>
                                                 </td>
                                             </tr>
                                             @endif
@@ -277,11 +284,13 @@ Edit Payment
                                                         </div>
                                                     </td>
                                                     <td>
+                                                        @if($mode != 'view')
                                                         <div class="btn-group">
                                                             <button type="button" onclick="move_up(this);" class="btn btn-primary btn-up"><i class="bi bi-arrow-up"></i></button>
                                                             <button type="button" onclick="move_down(this);" class="btn btn-primary btn-down"><i class="bi bi-arrow-down"></i></button>
                                                             <button type="button" onclick="remove(this);" class="btn btn-danger btn-delete"><i class="bi bi-trash"></i></button>
                                                         </div>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -316,12 +325,14 @@ Edit Payment
 @endsection
 
 @section('content_footer')
+@if($mode != 'view')
 <div class="row mx-0">
     <div class="col"></div>
     <div class="col-auto">
         <label for="SubmitBtn" class="btn btn-success"><i class="bi bi-save me-2"></i>Save</label>
     </div>
 </div>
+@endif
 @endsection
 
 @section('js')

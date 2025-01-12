@@ -48,6 +48,16 @@ Edit Mitra
                             <input type="text" name="mitra_company" class="form-control" required placeholder="Masukan nama perusahaan mitra" @if(old('mitra_company')) value="{{old('mitra_company')}}" @elseif(isset($mitra)) value="{{$mitra->mitra_company}}" @endif>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Suffix Code</label>
+                            @if($mode != 'add')
+                            <input type="text" class="form-control" readonly placeholder="Masukan kode unik mitra" @if(old('code')) value="{{old('code')}}" @elseif(isset($mitra)) value="{{$mitra->suffix_code}}" @endif>
+                            @else
+                            <input type="text" name="code" class="form-control" required placeholder="Masukan kode unik mitra" @if(old('code')) value="{{old('code')}}" @elseif(isset($mitra)) value="{{$mitra->suffix_code}}" @endif>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

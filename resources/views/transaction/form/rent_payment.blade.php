@@ -15,13 +15,18 @@
         <table id="payment-table" class="table">
             <thead>
                 <tr>
-                    <td colspan="8"><h5>History Payment</h5></td>
+                    <td colspan="8">
+                        <div class="row my-2">
+                            <div class="col-auto"><h5>History Payment</h5></div>
+                            <div class="col-auto"><a href="{{route('transaction.rent.payment.view', ['transaction_id' => $transaction_id])}}" class="btn btn-sm btn-outline-primary">See More</a></div>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <th>No.</th>
                     <th>Nominal</th>
                     <th>Keterangan</th>
-                    <th>Debit / Kredit</th>
+                    <th>Out / In</th>
                     <th>Tanggal Payment</th>
                     <th>Lampiran</th>
                 </tr>
@@ -98,10 +103,10 @@
         var page = (curr_page_payment * max_row_payment) - max_row_payment;
         $.each(data, function(x,y){
             var amount = y.entry_debit;
-            var tipe_flow = "Debit";
+            var tipe_flow = "Out";
             if(y.entry_cashflow == 1){
                 amount = y.entry_credit;
-                tipe_flow = 'Kredit';
+                tipe_flow = 'In';
             }
 
             rows += `
