@@ -7,6 +7,10 @@
         return $config;
     }
 
+    function format_time($time, $format){
+        return Carbon::parse($time)->format($format);
+    }
+
     function bank_lists(){
         return [
             'BCA',

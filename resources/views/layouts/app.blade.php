@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark" style="overflow:hidden;">
+<html lang="en" data-bs-theme="dark" @if(!isset($allow_scroll)) style="overflow:hidden;" @endif>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

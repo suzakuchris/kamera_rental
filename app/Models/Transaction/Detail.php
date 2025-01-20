@@ -38,4 +38,8 @@ class Detail extends Model
     public function item(){
         return $this->hasOne(Items::class, 'item_id', 'item_id');
     }
+
+    public function header(){
+        return $this->hasOne(Header::class, 'transaction_id', 'transaction_id');
+    }
 }

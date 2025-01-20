@@ -31,6 +31,7 @@ use App\Models\Transaction\Serah_Terima;
 use App\Models\Transaction\Serah_Terima_Detail;
 use App\Models\Transaction\Serah_Terima_Attachment;
 
+use App\Models\Config;
 
 class TransactionController extends Controller
 {
@@ -814,6 +815,12 @@ class TransactionController extends Controller
             array_push($return_data, asset("/").$attachment->image_path.$attachment->image_name);
         }
         return json_encode($return_data);
+    }
+
+    public function print_serah_terima(Request $req){
+        $data['serah_terima'] = Serah_Terima::find($req->transaction_id);
+        $data['setting'] = Config::first();
+        return view('transaction.serah_terima_print', $data);
     }
 
     public function add_serah_terima(Request $req){

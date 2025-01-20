@@ -19,4 +19,8 @@ class Serah_Terima extends Model
     public function images(){
         return $this->hasMany(Serah_Terima_Attachment::class, 'header_id', 'header_id');
     }
+
+    public function transaction(){
+        return $this->hasOne(Header::class, 'transaction_id', 'header_transaction_id');
+    }
 }

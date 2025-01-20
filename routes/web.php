@@ -209,7 +209,8 @@ Route::group(['middleware' => 'auth'], function(){
                 Route::post('/attachment', [TransactionController::class, 'search_serah_terima_attachment'])->name('transaction.rent.serah_terima.attachment');
                 Route::get('/add/{transaction_id}', [TransactionController::class, 'add_serah_terima'])->name('transaction.rent.serah_terima.add');
                 Route::post('/upsert', [TransactionController::class, 'upsert_serah_terima'])->name('transaction.rent.serah_terima.upsert');
-            
+                Route::get('/print/{transaction_id?}', [TransactionController::class, 'print_serah_terima'])->name('transaction.rent.serah_terima.print');
+                
                 Route::group(['prefix' => 'detail_serah_terima/{transaction_id}'], function(){
                     Route::get('/', [TransactionController::class, 'serah_terima_index'])->name('transaction.rent.serah_terima.view');
                     Route::post('/search', [TransactionController::class, 'serah_terima_search'])->name('transaction.rent.serah_terima.view.search');
