@@ -114,7 +114,7 @@
                             </tr>
                             <tr>
                                 <td>Tanda Terima Alat</td>
-                                <td><a href="{{route('transaction.rent.serah_terima.print')}}/`+b.header_id+`" class="btn btn-sm btn-primary"><i class="bi bi-print me-2"></i>Cetak</a></td>
+                                <td><a target="_blank" href="{{route('transaction.rent.serah_terima.print')}}/`+b.header_id+`" class="btn btn-sm btn-primary"><i class="bi bi-print me-2"></i>Cetak</a></td>
                             </tr>
                             <tr>
                                 <td colspan="2">List Alat Serah Terima:</td>
