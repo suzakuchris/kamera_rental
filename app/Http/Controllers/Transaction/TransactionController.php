@@ -1077,7 +1077,6 @@ class TransactionController extends Controller
 
     public function print(Request $req){
         $data['header'] = Header::find($req->transaction_id);
-        dd($data);
         $data['rekening'] = Rekening::where('fg_aktif', 1)->first();
         // dd($data['header']->details);
         $data['setting'] = Config::first();
