@@ -1074,4 +1074,12 @@ class TransactionController extends Controller
             exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
         }
     }
+
+    public function print(Request $req){
+        $data['header'] = Header::find($req->transaction_id);
+        $data['rekening'] = Rekening::where('fg_aktif', 1)->first();
+        // dd($data['header']->details);
+        $data['setting'] = Config::first();
+        return view('transaction.rent_print', $data);
+    }
 }
