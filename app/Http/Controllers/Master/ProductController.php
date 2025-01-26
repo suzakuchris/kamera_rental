@@ -75,8 +75,8 @@ class ProductController extends Controller
             'product_name' => 'required|max:255',
             'product_brand' => 'required',
             'product_type' => 'required',
-            'product_specification' => 'required',
-            'product_description' => 'required',
+            // 'product_specification' => 'required',
+            // 'product_description' => 'required',
             'product_images_add' => 'required_without:product_images_keep',
             'product_images_keep' => 'required_without:product_images_add'
         ],[
@@ -84,8 +84,8 @@ class ProductController extends Controller
             'product_name.max' => 'Nama produk maksimal :max karakter',
             'product_brand.required' => 'Brand harus dipilih',
             'product_type.required' => 'Type harus dipilih',
-            'product_specification.required' => 'Spesifikasi produk harus diisi',
-            'product_description.required' => 'Deskripsi produk harus diisi'
+            // 'product_specification.required' => 'Spesifikasi produk harus diisi',
+            // 'product_description.required' => 'Deskripsi produk harus diisi'
         ]);
 
         if ($validator->fails()) {

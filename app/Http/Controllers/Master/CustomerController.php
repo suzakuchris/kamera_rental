@@ -64,15 +64,15 @@ class CustomerController extends Controller
     public function upsert(Request $req){
         $validator = Validator::make($req->all(), [
             'customer_name' => 'required|max:255',
-            'customer_email' => 'required|email',
-            'customer_phone' => 'required|numeric',
+            // 'customer_email' => 'required|email',
+            // 'customer_phone' => 'required|numeric',
         ],[
             'customer_name.required' => 'Nama customer harus diisi',
             'customer_name.max' => 'Nama customer maksimal :max karakter',
-            'customer_email.required' => 'Email customer harus diisi',
-            'customer_email.email' => 'Format email salah',
-            'customer_phone.required' => 'No. Hp harus diisi',
-            'customer_phone.numeric' => 'No. Hp harus berupa angka',
+            // 'customer_email.required' => 'Email customer harus diisi',
+            // 'customer_email.email' => 'Format email salah',
+            // 'customer_phone.required' => 'No. Hp harus diisi',
+            // 'customer_phone.numeric' => 'No. Hp harus berupa angka',
         ]);
 
         if ($validator->fails()) {

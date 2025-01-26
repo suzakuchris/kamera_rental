@@ -334,8 +334,8 @@ Update Transaction
                         <tr>
                             <td class="text-end" colspan="6">PPn (%)</td>
                             <td>
-                                <input type="number" value="10" class="form-control" disabled>
-                                <input type="hidden" name="ppn" value="10">
+                                <input type="number" name="ppn" value="10" class="form-control" @if($mode == 'add') value="0" @else value="{{comma_separated($header->transaction_ppn_amount)}}" @endif>
+                                @if(false)<input type="hidden" name="ppn" value="10">@endif
                             </td>
                             <td colspan="2"></td>
                         </tr>

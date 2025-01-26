@@ -45,13 +45,13 @@ Edit Customer
                     <div class="col-12">
                         <div class="form-group">
                             <label>Email Customer</label>
-                            <input type="email" name="customer_email" class="form-control" required placeholder="Masukan email customer" @if(old('customer_email')) value="{{old('customer_email')}}" @elseif(isset($customer)) value="{{$customer->customer_email}}" @endif>
+                            <input type="email" name="customer_email" class="form-control" placeholder="Masukan email customer" @if(old('customer_email')) value="{{old('customer_email')}}" @elseif(isset($customer)) value="{{$customer->customer_email}}" @endif>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
                             <label>No.HP Customer</label>
-                            <input type="number" name="customer_phone" class="form-control" required placeholder="Masukan no.hp customer" @if(old('customer_phone')) value="{{old('customer_phone')}}" @elseif(isset($customer)) value="{{$customer->customer_phone}}" @endif>
+                            <input type="number" name="customer_phone" class="form-control" placeholder="Masukan no.hp customer" @if(old('customer_phone')) value="{{old('customer_phone')}}" @elseif(isset($customer)) value="{{$customer->customer_phone}}" @endif>
                         </div>
                     </div>
                     <div class="col-12">
