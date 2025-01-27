@@ -48,6 +48,7 @@
         }
 
         $timestamp = str_pad($increment, 4, '0', STR_PAD_LEFT)."/"."FM/".$now->year."/".$now->month."/".str_pad($now->day, 2, '0', STR_PAD_LEFT)."/".$customer_code;
+        return $timestamp;
     }
 
     function comma_separated($number){
