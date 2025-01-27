@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content_header')
-<h4>Master Product Type</h4>
+<h4>Master Product Category</h4>
 @endsection
 
 @section('content')

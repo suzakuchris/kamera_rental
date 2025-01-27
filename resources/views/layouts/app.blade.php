@@ -70,10 +70,10 @@
     <div class="container-fluid p-0 vh-100">
         @if(!isset($no_sidebar))
         <div class="row mx-0 h-100">
-            <div class="col-auto ps-0 vh-100">
+            <div class="col-1 ps-0 vh-100">
                 @include('components.common.sidebar')
             </div>
-            <div class="col py-0 pe-0 vh-100">
+            <div class="col-11 py-0 pe-0 vh-100">
                 <div class="card h-100 border-0">
                     <div class="card-header">@yield('content_header')</div>
                     <div class="card-body h-100 overflow-auto">@yield('content')</div>
