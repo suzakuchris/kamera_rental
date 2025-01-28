@@ -176,6 +176,7 @@
                     },
                     success : function(msg) {
                         Swal.fire("Saved!", "", "success");
+                        search_process();
                     },
                     error     : function(xhr) {
                         console.log(xhr);

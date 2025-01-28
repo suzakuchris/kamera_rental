@@ -49,7 +49,8 @@ class TransactionController extends Controller
                     ->leftJoin('users as b', 'a.created_by', 'b.id')
                     ->leftJoin('users as c', 'a.updated_by', 'c.id')
                     ->join('mst_customers as d', 'd.customer_id', 'a.transaction_customer')
-                    ->join('mst_rekening as e', 'a.transaction_rekening', 'e.rekening_id');
+                    ->join('mst_rekening as e', 'a.transaction_rekening', 'e.rekening_id')
+                    ->where('a.fg_aktif', 1);
 
         if(isset($req->search)){
             $search = $req->search;
@@ -398,9 +399,11 @@ class TransactionController extends Controller
 
             foreach($discard as $dis){
                 $item_id = $dis->item_id;
-                $item = Items::find($item_id);
-                $item->item_status = 1;
-                $item->save();
+                if(isset($item_id)){
+                    $item = Items::find($item_id);
+                    $item->item_status = 1;
+                    $item->save();
+                }
 
                 $dis->fg_aktif = 0;
                 $dis->updated_by = $user;
@@ -1081,5 +1084,34 @@ class TransactionController extends Controller
         // dd($data['header']->details);
         $data['setting'] = Config::first();
         return view('transaction.rent_print', $data);
+    }
+
+    public function delete(Request $req){
+        $transaction_id = $req->transaction_id;
+        
+        DB::beginTransaction();
+        try{
+            $header = Header::find($req->transaction_id);
+            $header->fg_aktif = 0;
+            $header->save();
+
+            foreach($header->details as $detail){
+                if(isset($detail->item_id)){
+                    $item = Items::find($detail->item_id);
+                    if($item->item_status == 0){
+                        $item->item_status = 1;
+                        $item->save();  
+                    }
+                }
+            }
+
+            DB::commit();
+            http_response_code(200);
+            exit(json_encode(['Message' => 'Data berhasil dihapus']));
+        }catch(Exception $e){
+            DB::rollback();
+            http_response_code(405);
+            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+        }
     }
 }
