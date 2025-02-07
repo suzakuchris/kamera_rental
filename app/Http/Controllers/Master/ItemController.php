@@ -133,7 +133,8 @@ class ItemController extends Controller
         }
         $validator = Validator::make($req->all(), [
             'product_id' => 'required',
-            'item_code' => 'required|max:255|unique:items,item_code'.$except,
+            // 'item_code' => 'required|max:255|unique:items,item_code'.$except,
+            'item_code' => 'required|max:255',
             'item_owner' => 'required',
             'item_condition' => 'required',
             'item_status' => 'required',
@@ -149,12 +150,17 @@ class ItemController extends Controller
             'item_notes.max' => 'Notes barang maksimal :max karakter',
         ]);
 
+        
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         DB::beginTransaction();
         try{
+            //cek same
+            $qr_cek = Items::where('product_id', $req->product_id)->where('item_code', $req->item_code);
+    
             if(!isset($req->item_id)){
                 $item = new Items();
                 $item->product_id = $req->product_id;
@@ -162,6 +168,13 @@ class ItemController extends Controller
             }else{
                 $item = Items::find($req->item_id);
                 $item->updated_by = Auth::user()->id;
+
+                $qr_cek = $qr_cek->where('item_id', '!=', $req->item_id);
+            }
+
+            $qr_cek = $qr_cek->first();
+            if(isset($qr_cek)){
+                throw new Exception("Sudah ada item code ".$req->item_code."untuk produk yang dipilih");
             }
 
             $item->item_code = $req->item_code;

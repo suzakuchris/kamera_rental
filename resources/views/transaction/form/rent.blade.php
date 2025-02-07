@@ -79,9 +79,23 @@ Update Transaction
                             <td>Tanggal Sewa</td>
                             <td>
                                 <div class="d-flex align-items-center">
+                                    @if($mode == 'add')
                                     <input type="date" name="date_start" class="form-control" @if($mode != "add") value="{{\Carbon\Carbon::parse($header->transaction_tgl_ambil)->format('Y-m-d')}}" @else value="{{date('Y-m-d')}}" @endif>
                                     <b class="mx-2">-</b>
                                     <input type="date" name="date_end" class="form-control" @if($mode != "add") value="{{\Carbon\Carbon::parse($header->transaction_tgl_pemulangan)->format('Y-m-d')}}" @else value="{{date('Y-m-d')}}" @endif>
+                                    @else
+                                        @php
+                                            $start_date = \Carbon\Carbon::parse($header->transaction_tgl_ambil)->format('Y-m-d');
+                                            $end_date = \Carbon\Carbon::parse($header->transaction_tgl_pemulangan)->format('Y-m-d');
+                                        @endphp
+                                        @if($start_date != $end_date)
+                                            <input type="date" name="date_start" class="form-control" @if($mode != "add") value="{{\Carbon\Carbon::parse($header->transaction_tgl_ambil)->format('Y-m-d')}}" @else value="{{date('Y-m-d')}}" @endif>
+                                            <b class="mx-2">-</b>
+                                            <input type="date" name="date_end" class="form-control" @if($mode != "add") value="{{\Carbon\Carbon::parse($header->transaction_tgl_pemulangan)->format('Y-m-d')}}" @else value="{{date('Y-m-d')}}" @endif>
+                                        @else
+                                            <input type="date" name="date_start" class="form-control" @if($mode != "add") value="{{\Carbon\Carbon::parse($header->transaction_tgl_ambil)->format('Y-m-d')}}" @else value="{{date('Y-m-d')}}" @endif>
+                                        @endif
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -115,7 +129,7 @@ Update Transaction
                 <table id="detail-table" class="table w-100">
                     <thead>
                         <tr>
-                            <td colspan="8"><h5>Alat yang Disewa</h5></td>
+                            <td colspan="7"><h5>Alat yang Disewa</h5></td>
                             <td>
                                 @if(isset($header))
                                 <a href="{{route('transaction.rent.print', ['transaction_id' => $header->transaction_id])}}" class="btn btn-primary d-flex align-items-center"><i class="bi bi-printer me-2"></i>Invoice</a>
@@ -154,7 +168,7 @@ Update Transaction
                             <td>Harga Sewa per hari</td>
                             <td>Total Harga Sewa</td>
                             <td class="auto-width">@if($mode != 'add') Return @endif</td>
-                            <td class="auto-width"></td>
+                            @if($mode == 'add') <td class="auto-width"></td> @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -246,7 +260,6 @@ Update Transaction
                                     <td class="text-center">
                                         <input type="checkbox" disabled>
                                     </td>
-                                    <td></td>
                                 </tr>
                                 @endif
                             @else
@@ -314,14 +327,22 @@ Update Transaction
                             <td>
                                 <div class="text-end" id="total_detail"></div>
                             </td>
+                            @if($mode == 'add')
                             <td colspan="2"></td>
+                            @else
+                            <td colspan="1"></td>
+                            @endif
                         </tr>
                         <tr>
                             <td class="text-end" colspan="6">Diskon (%)</td>
                             <td>
                                 <input type="number" name="diskon_persen" placeholder="Persen" @if($mode == 'add') value="0" @else value="{{$header->transaction_discount_percent}}" @endif min="0" max="100" class="form-control">
                             </td>
+                            @if($mode == 'add')
                             <td colspan="2"></td>
+                            @else
+                            <td colspan="1"></td>
+                            @endif
                         </tr>
                         <tr>
                             <td class="text-end" colspan="6">Diskon Lainnya</td>
@@ -329,7 +350,11 @@ Update Transaction
                                 <input type="text" placeholder="Harga Diskon (Potongan)" data-target="diskon_lain" class="form-control comma-separated" @if($mode == 'add') value="0" @else value="{{comma_separated($header->transaction_discount)}}" @endif>
                                 <input type="hidden" id="diskon_lain" name="diskon_lain" class="form-control" @if($mode == 'add') value="0" @else value="{{($header->transaction_discount)}}" @endif>
                             </td>
+                            @if($mode == 'add')
                             <td colspan="2"></td>
+                            @else
+                            <td colspan="1"></td>
+                            @endif
                         </tr>
                         <tr>
                             <td class="text-end" colspan="6">PPn (%)</td>
@@ -337,14 +362,22 @@ Update Transaction
                                 <input type="number" name="ppn" value="10" class="form-control" @if($mode == 'add') value="0" @else value="{{comma_separated($header->transaction_ppn_amount)}}" @endif>
                                 @if(false)<input type="hidden" name="ppn" value="10">@endif
                             </td>
+                            @if($mode == 'add')
                             <td colspan="2"></td>
+                            @else
+                            <td colspan="1"></td>
+                            @endif
                         </tr>
                         <tr>
                             <td class="text-end" colspan="6">Grand Total</td>
                             <td>
                                 <input type="text" name="grand_total" id="grand_total" class="form-control" disabled @if($mode == 'add') value="0" @else value="{{comma_separated($header->transaction_amount)}}" @endif>
                             </td>
+                            @if($mode == 'add')
                             <td colspan="2"></td>
+                            @else
+                            <td colspan="1"></td>
+                            @endif
                         </tr>
                         @if(false)
                         @if($mode != 'add')

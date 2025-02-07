@@ -72,7 +72,8 @@
             dataType: 'JSON',
             data    : {
                 'page':curr_page,
-                'max_row':max_row
+                'max_row':max_row,
+                'search':search
             },
             success : function(msg) {
                 console.log(msg);

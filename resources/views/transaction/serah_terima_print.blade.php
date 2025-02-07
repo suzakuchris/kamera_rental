@@ -65,7 +65,7 @@
                             </table>
                         </div>
                         <div class="col-12">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -78,7 +78,40 @@
                                 <tbody>
                                     @php
                                         $i=1;
+                                        $loop_arr = [];
+                                        foreach($serah_terima->details as $detail){
+                                            $go_continue = false;
+                                            foreach($loop_arr as $_obj){
+                                                if($detail->transaction_detail->product->product_id == $_obj->product_id){
+                                                    $_obj->qty += 1;
+                                                    $_obj->item_code .= " + ".$detail->transaction_detail->item->item_code;
+                                                    $go_continue = true;
+                                                }
+                                            }
+                                            if($go_continue){
+                                                continue;
+                                            }
+                                            $obj = new \stdClass();
+                                            $obj->product_id = $detail->transaction_detail->product->product_id;
+                                            $obj->product_brand = $detail->transaction_detail->product->brand->product_brand_name;
+                                            $obj->product_name = $detail->transaction_detail->product->product_name;
+                                            $obj->qty = 1;
+                                            $obj->item_code = $detail->transaction_detail->item->item_code;
+
+                                            array_push($loop_arr, $obj);
+                                        }
                                     @endphp
+                                    @foreach($loop_arr as $obj)
+                                    <tr>
+                                        <td>{{$i++}}</td>
+                                        <td><b>{{$obj->product_brand}}</b> {{$obj->product_name}}</td>
+                                        <td class="text-center">{{$obj->qty}}</td>
+                                        <td class="text-center">{{$obj->item_code}}</td>
+                                        <td></td>
+                                    </tr>
+                                    @endforeach
+
+                                    @if(false)
                                     @foreach($serah_terima->details as $detail)
                                     <tr>
                                         <td>{{$i++}}</td>
@@ -88,6 +121,7 @@
                                         <td></td>
                                     </tr>
                                     @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -98,7 +132,7 @@
                                 <div>Note:</div>
                             </div>
                         </div>
-                        <div class="col-5">
+                        <div class="col-4">
                             <div class="border p-2 my-2">
                                 <div>Jakarta, {{date("d F Y")}}</div>
                             </div>
@@ -106,7 +140,7 @@
                                 <div>Jam Pengambilan: {{date('H:i:s')}}</div>
                             </div>
                         </div>
-                        <div class="col-7">
+                        <div class="col-8">
                             <div class="border p-2 my-2">
                                 <div>- Apabila ada kerusakan/kehilangan di lokasi, menjadi tanggung jawab penyewa.</div>
                                 <div>- Sebelum pengambilan barang, terlebih dahulu melakukan pengecekan / tes kelayakan.</div>

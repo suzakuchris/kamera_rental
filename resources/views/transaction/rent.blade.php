@@ -135,7 +135,7 @@
                     <td>`+updated+`</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{route('transaction.rent.view')}}/`+y.transaction_id+`" class="btn btn-outline-primary d-flex align-items-center"><i class="bi bi-pencil me-2"></i>Edit</a>
+                            <a href="{{route('transaction.rent.view')}}/`+y.transaction_id+`" class="btn btn-outline-primary d-flex align-items-center"><i class="bi bi-eye me-2"></i>View</a>
                             <button class="btn btn-outline-danger d-flex align-items-center" onclick="delete_data(`+y.transaction_id+`)"><i class="bi bi-trash me-2"></i>Delete</button>
                         </div>
                     </td>

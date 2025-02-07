@@ -1,11 +1,11 @@
-<nav class="sidebar close p-relative">
+<nav class="sidebar p-relative">
     <div class="card h-100" style="border:0px;">
       <div class="card-header p-0 border-0" style="background:transparent;border:0px;">
         <header>
             <span class="image">
                 <img class="w-100" src="{{asset(site_config()->site_logo)}}" alt="">
             </span>
-            <i class='bi bi-chevron-right toggle p-1' style="font-size:10px;"></i>
+            @if(false)<i class='bi bi-chevron-right toggle p-1' style="font-size:10px;"></i>@endif
         </header>
       </div>
       <div class="card-body px-0 h-100 overflow-auto">
@@ -113,7 +113,7 @@
               </a>
           </li>
 
-          <li class="mode ps-4">
+          <li class="mode">
               <span class="mode-text text"><i class='bi bi-moon pe-2'></i>Dark mode</span>
               <div class="toggle-switch">
               <span class="switch"></span>

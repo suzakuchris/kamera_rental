@@ -144,7 +144,10 @@ Edit Payment
                                                 <td>Nama Alat</td>
                                                 <td>Brand</td>
                                                 <td>Ownership</td>
-                                                <td class="auto-width">Include</td>
+                                                <td class="auto-width text-center">
+                                                    <div>Include</div>
+                                                    <div><input type="checkbox" id="check_all"></div>
+                                                </td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -337,6 +340,12 @@ Edit Payment
 
 @section('js')
 <script>
+    $('#check_all').click(function () {
+        var checked_status = this.checked;
+
+        $('form input[type=checkbox]').not(":disabled").prop("checked", checked_status);
+    });
+
     function pre_submit(event, form){
         event.preventDefault();
         var isValid = form.reportValidity();
