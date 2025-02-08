@@ -1,3 +1,11 @@
+<style>
+    .dosa-entries .toggled-data{
+        display:none;
+    }
+    .dosa-entries.expanded .toggled-data{
+        display:table-row;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <td>
@@ -30,6 +38,12 @@
 <script>
     $(document).ready(function(){
         search_dosa();
+    });
+
+    $(document).on('click', '.dosa-entries .toggler', function(){
+        var row = $(this);
+        var entry = row.closest('.dosa-entries');
+        entry.toggleClass('expanded');
     });
 
     function search_dosa(){
@@ -90,19 +104,19 @@
             cards += `
                 <div class="card mb-2">
                     <div class="card-body">
-                        <table class="table w-100">
-                            <tr>
+                        <table class="table w-100 dosa-entries">
+                            <tr class="toggler">
                                 <td class="auto-width">Tanggal & Jam Lapor</td>
                                 <td>`+tanggal_jam+`</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td>Keterangan</td>
                                 <td>`+b.header_notes+`</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td colspan="2">List Alat Bermasalah:</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td colspan="2">
                                     <table class="table table-bordered">
                                         <thead>

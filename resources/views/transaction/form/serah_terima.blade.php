@@ -1,3 +1,11 @@
+<style>
+    .serah-terima-entries .toggled-data{
+        display:none;
+    }
+    .serah-terima-entries.expanded .toggled-data{
+        display:table-row;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <td>
@@ -43,6 +51,12 @@
 <script>
     $(document).ready(function(){
         search_serah_terima();
+    });
+
+    $(document).on('click', '.serah-terima-entries .toggler', function(){
+        var row = $(this);
+        var entry = row.closest('.serah-terima-entries');
+        entry.toggleClass('expanded');
     });
 
     function search_serah_terima(){
@@ -99,27 +113,27 @@
             cards += `
                 <div class="card mb-2">
                     <div class="card-body">
-                        <table class="table w-100">
-                            <tr>
+                        <table class="table w-100 serah-terima-entries">
+                            <tr class="toggler">
                                 <td class="auto-width">Tanggal & Jam</td>
                                 <td>`+tanggal_jam+`</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td>Keterangan</td>
                                 <td>`+b.header_notes+`</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td>Lampiran</td>
                                 <td><button type="button" onclick="show_lampiran_serah_terima('`+b.header_id+`')" class="btn btn-sm btn-primary">Lampiran</button></td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td>Tanda Terima Alat</td>
                                 <td><a target="_blank" href="{{route('transaction.rent.serah_terima.print')}}/`+b.header_id+`" class="btn btn-sm btn-primary"><i class="bi bi-printer me-2"></i>Cetak</a></td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td colspan="2">List Alat Serah Terima:</td>
                             </tr>
-                            <tr>
+                            <tr class="toggled-data">
                                 <td colspan="2">
                                     <table class="table table-bordered">
                                         <thead>
