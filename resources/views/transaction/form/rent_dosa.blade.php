@@ -1,4 +1,13 @@
 <style>
+    .dosa-entries .toggler .bi-chevron-up{
+        display:none;
+    }
+    .dosa-entries.expanded .toggler .bi-chevron-up, .dosa-entries .toggler .bi-chevron-down{
+        display:inline-block;
+    }
+    .dosa-entries.expanded .toggler .bi-chevron-down{
+        display:none;
+    }
     .dosa-entries .toggled-data{
         display:none;
     }
@@ -106,7 +115,7 @@
                     <div class="card-body">
                         <table class="table w-100 dosa-entries">
                             <tr class="toggler">
-                                <td class="auto-width">Tanggal & Jam Lapor</td>
+                                <td class="auto-width"><i class="bi bi-chevron-down me-2"></i><i class="bi bi-chevron-up me-2"></i>Tanggal & Jam Lapor</td>
                                 <td>`+tanggal_jam+`</td>
                             </tr>
                             <tr class="toggled-data">

@@ -66,7 +66,7 @@ Edit Customer
                             @if($mode != 'add')
                             <input type="text" class="form-control" readonly placeholder="Masukan kode unik customer" @if(old('code')) value="{{old('code')}}" @elseif(isset($customer)) value="{{$customer->suffix_code}}" @endif>
                             @else
-                            <input type="text" name="code" class="form-control" required placeholder="Masukan kode unik customer" @if(old('code')) value="{{old('code')}}" @elseif(isset($customer)) value="{{$customer->suffix_code}}" @endif>
+                            <input type="text" pattern="(.){0,6}" required title="0-6 characters" maxlength="6" name="code" class="form-control" required placeholder="Masukan kode unik customer" @if(old('code')) value="{{old('code')}}" @elseif(isset($customer)) value="{{$customer->suffix_code}}" @endif>
                             @endif
                         </div>
                     </div>

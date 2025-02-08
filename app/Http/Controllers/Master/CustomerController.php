@@ -64,11 +64,14 @@ class CustomerController extends Controller
     public function upsert(Request $req){
         $validator = Validator::make($req->all(), [
             'customer_name' => 'required|max:255',
+            'code' => 'required|max:6',
             // 'customer_email' => 'required|email',
             // 'customer_phone' => 'required|numeric',
         ],[
             'customer_name.required' => 'Nama customer harus diisi',
             'customer_name.max' => 'Nama customer maksimal :max karakter',
+            'code.max' => 'Customer code maksimal :max karakter',
+            'code.required' => 'Customer code harus diisi',
             // 'customer_email.required' => 'Email customer harus diisi',
             // 'customer_email.email' => 'Format email salah',
             // 'customer_phone.required' => 'No. Hp harus diisi',
@@ -84,14 +87,11 @@ class CustomerController extends Controller
             if(!isset($req->customer_id)){
                 $customer = new Customer();
                 $customer->created_by = Auth::user()->id;
-            }else{
-                $customer = Customer::find($req->customer_id);
-                $customer->updated_by = Auth::user()->id;
                 //cek code
                 if(!isset($req->code)){
                     throw new Exception('Customer Code harus diisi');
                 }
-                if(len($req->code) > 50){
+                if(strlen($req->code) > 6){
                     throw new Exception('Customer Code terlalu panjang!');
                 }
                 $qr_cek = Customer::where('fg_aktif', 1)->where('suffix_code', $req->code)->first();
@@ -99,6 +99,9 @@ class CustomerController extends Controller
                     throw new Exception('Customer Code sudah ada di database');
                 }
                 $customer->suffix_code = $req->code;
+            }else{
+                $customer = Customer::find($req->customer_id);
+                $customer->updated_by = Auth::user()->id;
             }
 
             $customer->customer_name = $req->customer_name;

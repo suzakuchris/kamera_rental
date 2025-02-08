@@ -1,4 +1,13 @@
 <style>
+    .serah-terima-entries .toggler .bi-chevron-up{
+        display:none;
+    }
+    .serah-terima-entries.expanded .toggler .bi-chevron-up, .serah-terima-entries .toggler .bi-chevron-down{
+        display:inline-block;
+    }
+    .serah-terima-entries.expanded .toggler .bi-chevron-down{
+        display:none;
+    }
     .serah-terima-entries .toggled-data{
         display:none;
     }
@@ -115,7 +124,7 @@
                     <div class="card-body">
                         <table class="table w-100 serah-terima-entries">
                             <tr class="toggler">
-                                <td class="auto-width">Tanggal & Jam</td>
+                                <td class="auto-width"><i class="bi bi-chevron-down me-2"></i><i class="bi bi-chevron-up me-2"></i>Tanggal & Jam</td>
                                 <td>`+tanggal_jam+`</td>
                             </tr>
                             <tr class="toggled-data">

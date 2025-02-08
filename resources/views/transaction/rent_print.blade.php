@@ -110,6 +110,9 @@
                                             if($go_continue){
                                                 continue;
                                             }
+                                            if($detail->item_bundle == 1 && !isset($detail->item_bundle_id)){
+                                                continue;
+                                            }
                                             $obj = new \stdClass();
                                             $obj->product_id = $detail->product->product_id;
                                             $obj->product_brand = $detail->product->brand->product_brand_name;
