@@ -4,7 +4,7 @@
 <style>
     @media print {
         /* visible when printed */
-        #print_btn {
+        .hide-for-print {
             display: none;
         }
 
@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-7 d-flex justify-content-end align-items-center">
                             <h5><b>{{$header->transaction_number}}</b></h5>
-                            <button id="print_btn" class="btn btn-primary" onclick="window.print();"><i class=""></i>Print</button>
+                            <button id="print_btn" class="btn btn-primary hide-for-print" onclick="window.print();"><i class=""></i>Print</button>
                         </div>
                         <div class="col-7">
                             <div>Jl. Tebet Barat VI E No. 1, Jakarta Selatan</div>
@@ -203,7 +203,9 @@
                             </div>
                             <div>
                                 <div>FM_Rent</div>
-                                <div style="height:200px;"></div>
+                                <div style="height:100px;text-align:center;">
+                                    @include('components.common.signature')
+                                </div>
                             </div>
                         </div>
                         <div class="col-8">
