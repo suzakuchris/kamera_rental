@@ -16,6 +16,7 @@ use App\Http\Controllers\Master\MitraController;
 use App\Http\Controllers\Master\RekeningController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\Transaction\TransactionController;
+use App\Http\Controllers\Transaction\StockOpnameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -231,6 +232,16 @@ Route::group(['middleware' => 'auth'], function(){
                     Route::post('/delete', [TransactionController::class, 'dosa_delete'])->name('transaction.rent.dosa.view.delete');
                 });
             });
+        });
+
+        Route::group(['prefix' => 'stock-opname'], function(){
+            Route::get('/', [StockOpnameController::class, 'index'])->name('transaction.stock_opname');
+            Route::post('/search', [StockOpnameController::class, 'search'])->name('transaction.stock_opname.search');
+
+            Route::get('/add', [StockOpnameController::class, 'add'])->name('transaction.stock_opname.form.add');
+            Route::get('/view/{id?}', [StockOpnameController::class, 'view'])->name('transaction.stock_opname.form.view');
+            
+            Route::post('/upsert', [StockOpnameController::class, 'upsert'])->name('transaction.stock_opname.upsert');
         });
     });
 });

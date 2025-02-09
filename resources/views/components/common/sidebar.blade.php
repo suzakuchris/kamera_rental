@@ -93,6 +93,12 @@
                           <span class="text nav-text">Transaction</span>
                       </a>
                     </div>
+                    <div class="collapse ps-4" id="collapseExample2">
+                      <a class="py-2 my-1" href="{{route('transaction.stock_opname')}}">
+                          <i class='bi bi-box icon'></i>  
+                          <span class="text nav-text">Stock Opname</span>
+                      </a>
+                    </div>
                   </li>
                   <li class="nav-link">
                     <a class="py-2" href="{{route('config.main')}}">
@@ -132,9 +138,9 @@
     modeSwitch = body.querySelector(".toggle-switch"),
     modeText = body.querySelector(".mode-text");
 
-    toggle.addEventListener("click", () => {
-        sidebar.classList.toggle("close");
-    })
+    // toggle.addEventListener("click", () => {
+    //     sidebar.classList.toggle("close");
+    // })
     // searchBtn.addEventListener("click", () => {
     //     sidebar.classList.remove("close");
     // })
