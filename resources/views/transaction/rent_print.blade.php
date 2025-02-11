@@ -110,7 +110,7 @@
                                             if($go_continue){
                                                 continue;
                                             }
-                                            if($detail->item_bundle == 1 && !isset($detail->item_bundle_id)){
+                                            if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
                                                 continue;
                                             }
                                             $obj = new \stdClass();
