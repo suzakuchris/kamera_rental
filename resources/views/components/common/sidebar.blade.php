@@ -1,4 +1,4 @@
-<nav class="sidebar p-relative">
+<nav class="sidebar p-relative" style="zoom:0.9;">
     <div class="card h-100" style="border:0px;">
       <div class="card-header p-0 border-0" style="background:transparent;border:0px;">
         <header>

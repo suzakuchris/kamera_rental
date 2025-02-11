@@ -74,7 +74,7 @@
                 @include('components.common.sidebar')
             </div>
             <div class="col py-0 pe-0 ps-0 vh-100">
-                <div class="card h-100 border-0">
+                <div class="card h-100 border-0" style="zoom: 0.9;">
                     <div class="card-header">@yield('content_header')</div>
                     <div class="card-body h-100 overflow-auto">@yield('content')</div>
                     <div class="card-footer">@yield('content_footer')</div>
