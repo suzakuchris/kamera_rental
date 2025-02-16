@@ -205,7 +205,7 @@
                                 <div>Jakarta, {{date("d F Y")}}</div>
                             </div>
                             <div>
-                                <div>FM_Rent</div>
+                                <div style="text-align:center;">FM_Rent</div>
                                 <div style="height:100px;text-align:center;">
                                     @include('components.common.signature')
                                 </div>

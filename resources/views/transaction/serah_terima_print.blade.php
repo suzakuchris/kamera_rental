@@ -60,7 +60,19 @@
                                 </tr>
                                 <tr>
                                     <td>Tanggal&nbsp;Pemakaian:</td>
-                                    <td>{{format_time($serah_terima->transaction->transaction_tgl_ambil, "d F Y")}} - {{format_time($serah_terima->transaction->transaction_tgl_pemulangan, "d F Y")}}</td>
+                                    @php
+                                        $date_start = format_time($serah_terima->transaction->transaction_tgl_ambil, "d F Y");
+                                        $date_end = format_time($serah_terima->transaction->transaction_tgl_pemulangan, "d F Y");
+
+                                        $_date_start = \Carbon\Carbon::parse($serah_terima->transaction->transaction_tgl_ambil)->startOfDay();
+                                        $_date_end = \Carbon\Carbon::parse($serah_terima->transaction->transaction_tgl_pemulangan)->startOfDay();
+                                        $date_diff = $_date_start->diffInDays($_date_end);
+                                    @endphp
+                                    @if($date_start != $date_end)
+                                        <td>{{$date_start}} - {{$date_end}}</td>
+                                    @else
+                                        <td>{{$date_start}}</td>
+                                    @endif
                                 </tr>
                             </table>
                         </div>
@@ -91,6 +103,9 @@
                                             if($go_continue){
                                                 continue;
                                             }
+                                            if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
+                                                continue;
+                                            }
                                             $obj = new \stdClass();
                                             $obj->product_id = $detail->transaction_detail->product->product_id;
                                             $obj->product_brand = $detail->transaction_detail->product->brand->product_brand_name;
@@ -115,7 +130,7 @@
                                     @foreach($serah_terima->details as $detail)
                                     <tr>
                                         <td>{{$i++}}</td>
-                                        <td><b>{{$detail->transaction_detail->product->brand->product_brand_name}}</b> {{$detail->transaction_detail->product->product_name}}</td>
+                                        <td><b>{{$detail->transaction_detail->product->brand->product_brand_name}} {{$detail->transaction_detail->product->type->product_type_name}}</b> {{$detail->transaction_detail->product->product_name}}</td>
                                         <td class="text-center">1</td>
                                         <td class="text-center">{{$detail->transaction_detail->item->item_code}}</td>
                                         <td></td>
@@ -146,7 +161,7 @@
                                 <div>- Sebelum pengambilan barang, terlebih dahulu melakukan pengecekan / tes kelayakan.</div>
                             </div>
                         </div>
-                        <div class="col-4 justify-content-center mt-3">
+                        <div class="col-4 justify-content-center mt-3" style="text-align:center;">
                             <div>FM_Rent</div>
                             <div style="height:100px;">@include('components.common.signature')</div>
                         </div>
