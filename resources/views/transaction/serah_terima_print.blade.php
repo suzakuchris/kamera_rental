@@ -103,11 +103,12 @@
                                             if($go_continue){
                                                 continue;
                                             }
-                                            if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
+                                            if($detail->transaction_detail->item_bundle == 1 && !isset($detail->transaction_detail->item_bundle_id)){
                                                 continue;
                                             }
                                             $obj = new \stdClass();
                                             $obj->product_id = $detail->transaction_detail->product->product_id;
+                                            $obj->product_type = $detail->transaction_detail->product->type->product_type_name;
                                             $obj->product_brand = $detail->transaction_detail->product->brand->product_brand_name;
                                             $obj->product_name = $detail->transaction_detail->product->product_name;
                                             $obj->qty = 1;
@@ -119,7 +120,7 @@
                                     @foreach($loop_arr as $obj)
                                     <tr>
                                         <td>{{$i++}}</td>
-                                        <td><b>{{$obj->product_brand}}</b> {{$obj->product_name}}</td>
+                                        <td><b>{{$obj->product_brand}} {{$obj->product_type}}</b> {{$obj->product_name}}</td>
                                         <td class="text-center">{{$obj->qty}}</td>
                                         <td class="text-center">{{$obj->item_code}}</td>
                                         <td></td>
