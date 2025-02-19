@@ -838,6 +838,7 @@ class TransactionController extends Controller
             'transaction_id' => 'required',
             'tanggal_serah_terima' => 'required',
             'keterangan' => 'required',
+            'details_keep' => 'required',
             'serah_terima_status' => 'required|numeric',
             'serah_terima_images_add' => 'required_without:serah_terima_images_keep',
             'serah_terima_images_keep' => 'required_without:serah_terima_images_add'
@@ -846,6 +847,7 @@ class TransactionController extends Controller
             'tanggal_serah_terima.required' => 'Tanggal serah terima harus diisi',
             'keterangan.required' => 'Silahkan masukan keterangan mengenai serah terima',
             'serah_terima_status.required' => 'Silahkan masukan Status serah terima',
+            'details_keep.required' => 'Harus pilih barang serah terima',
         ]);
 
         if ($validator->fails()) {
