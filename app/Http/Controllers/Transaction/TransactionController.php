@@ -967,7 +967,7 @@ class TransactionController extends Controller
             return redirect()->route('transaction.rent.view', ['transaction_id' => $header->header_transaction_id])->with(['success_message' => 'Transaksi berhasil dibuat']);
         }catch(Exception $e){
             DB::rollback();
-            return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan'.$e->getMessage()]);
+            return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan, '.$e->getMessage()]);
         }
     }
 
