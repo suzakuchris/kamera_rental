@@ -871,6 +871,7 @@ class TransactionController extends Controller
             $header->save();
 
             $details = $req->details_keep;
+            $found = false;
             foreach($details as $detail){
                 $detail_id = $detail["transaction_detail_id"];
                 if($detail["product_type"] == "product" && isset($detail["included"])){
@@ -879,6 +880,7 @@ class TransactionController extends Controller
                     $_detail->detail_transaction_id = $detail_id;
                     $_detail->created_by = Auth::user()->user_id;
                     $_detail->save();
+                    $found = true;
 
                     $__detail = Detail::find($detail_id);
                     $__detail->item_return = $header->header_status;
@@ -894,6 +896,7 @@ class TransactionController extends Controller
                             $_detail->detail_transaction_id = $b_detail_id;
                             $_detail->created_by = Auth::user()->user_id;
                             $_detail->save();
+                            $found = true;
         
                             $__detail = Detail::find($b_detail_id);
                             $__detail->item_return = $header->header_status;
@@ -902,6 +905,10 @@ class TransactionController extends Controller
                         }
                     }
                 }
+            }
+
+            if(!$found){
+                throw new Exception("Tidak ada produk yang dipilih serah terima");
             }
 
             $image_to_keep = [];
