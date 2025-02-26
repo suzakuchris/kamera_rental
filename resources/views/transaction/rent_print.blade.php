@@ -113,22 +113,43 @@
                                             if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
                                                 continue;
                                             }
-                                            $obj = new \stdClass();
-                                            $obj->product_id = $detail->product->product_id;
-                                            $obj->product_brand = $detail->product->brand->product_brand_name;
-                                            $obj->product_name = $detail->product->product_name;
-                                            $obj->product_bundle = $detail->item_bundle;
-                                            $obj->qty = 1;
-                                            $obj->item_price_per_day_uf = ($detail->item_price_per_day);
-                                            $obj->item_price_uf = ($detail->item_price);
-                                            if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
-                                                $obj->item_price_per_day = "-";
-                                                $obj->item_price = "-";
+
+                                            if($detail->item_bundle == 1){
+                                                $obj = new \stdClass();
+                                                $obj->product_id = $detail->bundle->bundle_id;
+                                                $obj->product_brand = "";
+                                                $obj->product_name = $detail->bundle->bundle_name;
+                                                $obj->product_bundle = $detail->item_bundle;
+                                                $obj->qty = 1;
+                                                $obj->item_price_per_day_uf = ($detail->item_price_per_day);
+                                                $obj->item_price_uf = ($detail->item_price);
+                                                if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
+                                                    $obj->item_price_per_day = "-";
+                                                    $obj->item_price = "-";
+                                                }else{
+                                                    $obj->item_price_per_day = comma_separated($detail->item_price_per_day);
+                                                    $obj->item_price = comma_separated($detail->item_price);
+                                                }
+                                                array_push($loop_arr, $obj);
                                             }else{
-                                                $obj->item_price_per_day = comma_separated($detail->item_price_per_day);
-                                                $obj->item_price = comma_separated($detail->item_price);
+                                                $obj = new \stdClass();
+                                                $obj->product_id = $detail->product->product_id;
+                                                $obj->product_brand = $detail->product->brand->product_brand_name;
+                                                $obj->product_name = $detail->product->product_name;
+                                                $obj->product_bundle = $detail->item_bundle;
+                                                $obj->qty = 1;
+                                                $obj->item_price_per_day_uf = ($detail->item_price_per_day);
+                                                $obj->item_price_uf = ($detail->item_price);
+                                                if($detail->item_bundle == 1 && isset($detail->item_bundle_id)){
+                                                    $obj->item_price_per_day = "-";
+                                                    $obj->item_price = "-";
+                                                }else{
+                                                    $obj->item_price_per_day = comma_separated($detail->item_price_per_day);
+                                                    $obj->item_price = comma_separated($detail->item_price);
+                                                }
+                                                array_push($loop_arr, $obj);
                                             }
-                                            array_push($loop_arr, $obj);
+                                            
                                         }
                                     @endphp
                                     @foreach($loop_arr as $__obj)

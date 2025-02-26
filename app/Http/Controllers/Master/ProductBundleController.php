@@ -35,7 +35,7 @@ class ProductBundleController extends Controller
 
         if(isset($req->search)){
             $search = $req->search;
-            $qr_data = $qr_data->where(function($_query){
+            $qr_data = $qr_data->where(function($_query) use($search){
                 $_query->where('a.bundle_name', 'like', '%'.$search.'%')
                 ->orWhere('a.bundle_description', 'like', '%'.$search.'%')
                 ->orWhere('a.bundle_specification', 'like', '%'.$search.'%');
