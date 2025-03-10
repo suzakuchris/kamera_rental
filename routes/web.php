@@ -187,6 +187,7 @@ Route::group(['middleware' => 'auth'], function(){
             Route::get('/view/{transaction_id?}', [TransactionController::class, 'view'])->name('transaction.rent.view');
             //print = ngelock
             Route::get('/print/{transaction_id?}', [TransactionController::class, 'print'])->name('transaction.rent.print');
+            Route::get('/quotation/{transaction_id?}', [TransactionController::class, 'quotation'])->name('transaction.rent.quotation');
 
             Route::post('/upsert', [TransactionController::class, 'upsert'])->name('transaction.rent.upsert');
             Route::post('/delete', [TransactionController::class, 'delete'])->name('transaction.rent.delete');
@@ -211,6 +212,7 @@ Route::group(['middleware' => 'auth'], function(){
                 Route::get('/add/{transaction_id}', [TransactionController::class, 'add_serah_terima'])->name('transaction.rent.serah_terima.add');
                 Route::post('/upsert', [TransactionController::class, 'upsert_serah_terima'])->name('transaction.rent.serah_terima.upsert');
                 Route::get('/print/{transaction_id?}', [TransactionController::class, 'print_serah_terima'])->name('transaction.rent.serah_terima.print');
+                Route::post('/print/add_bags', [TransactionController::class, 'print_add_bags'])->name('transaction.rent.serah_terima.print.add_bags');
                 
                 Route::group(['prefix' => 'detail_serah_terima/{transaction_id}'], function(){
                     Route::get('/', [TransactionController::class, 'serah_terima_index'])->name('transaction.rent.serah_terima.view');

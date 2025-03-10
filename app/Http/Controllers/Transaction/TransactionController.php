@@ -28,6 +28,7 @@ use App\Models\Transaction\Dosa;
 use App\Models\Transaction\Dosa_Detail;
 use App\Models\Transaction\Dosa_Attachment;
 use App\Models\Transaction\Serah_Terima;
+use App\Models\Transaction\Serah_Terima_Bags;
 use App\Models\Transaction\Serah_Terima_Detail;
 use App\Models\Transaction\Serah_Terima_Attachment;
 
@@ -73,7 +74,7 @@ class TransactionController extends Controller
         $data['mode'] = 'add';
         $data['customers'] = Customer::where('fg_aktif', 1)->get();
         $data['rekenings'] = Rekening::where('fg_aktif', 1)->get();
-        $data['products'] = Product::where('fg_aktif', 1)->get();
+        $data['products'] = Product::where('fg_aktif', 1)->where('product_type', '!=', tas_id())->get();
         $data['bundles'] = Bundle::where('fg_aktif', 1)->get();
         return view('transaction.form.rent', $data);
     }
@@ -128,7 +129,7 @@ class TransactionController extends Controller
         }
         $data['customers'] = Customer::where('fg_aktif', 1)->get();
         $data['rekenings'] = Rekening::where('fg_aktif', 1)->get();
-        $data['products'] = Product::where('fg_aktif', 1)->get();
+        $data['products'] = Product::where('fg_aktif', 1)->where('product_type', '!=', tas_id())->get();
         $data['bundles'] = Bundle::where('fg_aktif', 1)->get();
         return view('transaction.form.rent', $data);
     }
@@ -137,7 +138,7 @@ class TransactionController extends Controller
         $data['mode'] = 'edit';
         $data['customers'] = Customer::where('fg_aktif', 1)->get();
         $data['rekenings'] = Rekening::where('fg_aktif', 1)->get();
-        $data['products'] = Product::where('fg_aktif', 1)->get();
+        $data['products'] = Product::where('fg_aktif', 1)->where('product_type', '!=', tas_id())->get();
         $data['bundles'] = Bundle::where('fg_aktif', 1)->get();
         return view('transaction.form.rent', $data);
     }
@@ -823,7 +824,57 @@ class TransactionController extends Controller
     public function print_serah_terima(Request $req){
         $data['serah_terima'] = Serah_Terima::find($req->transaction_id);
         $data['setting'] = Config::first();
+        $data['bags'] = Product::where('fg_aktif', 1)->where('product_type', tas_id())->get(); 
         return view('transaction.serah_terima_print', $data);
+    }
+
+    public function print_add_bags(Request $req){
+        $validator = Validator::make($req->all(), [
+            'header_id' => 'required',
+            'bags' => 'required|array|min:1',
+        ],[
+            'header_id.required' => 'Data transaksi tidak ditemukan',
+            'bags.required' => 'Tas harus dipilih',
+            'bags.min' => 'Tas harus dipilih'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $header = Serah_Terima::find($req->header_id);
+
+        DB::beginTransaction();
+        try{
+            foreach($req->bags as $bag){
+                $existing = Serah_Terima_Bags::where('header_id', $req->header_id)->where('item_id', $bag)->first();
+                if(!isset($existing)){
+                    $new_bag = new Serah_Terima_Bags();
+                    $new_bag->header_id = $req->header_id;
+                    $new_bag->item_id = $bag;
+                    $new_bag->created_by = Auth::user()->id;
+                    $new_bag->save();
+
+                    $_bag = Items::find($bag);
+                    if($header->header_status == 1){
+                        //dikasih
+                        $_bag->item_status = 2;
+                        $_bag->updated_by = Auth::user()->id;
+                        $_bag->save();
+                    }else{
+                        //dibalikin
+                        $_bag->item_status = 1;
+                        $_bag->updated_by = Auth::user()->id;
+                        $_bag->save();
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->route('transaction.rent.serah_terima.print', ['transaction_id' => $req->header_id])->with(['success_message' => 'Tas berhasil ditambahkan']);
+        }catch(Exception $e){
+            DB::rollback();
+            return redirect()->back()->with(['error_message' => 'Terjadi kesalahan, '.$e->getMessage()]);
+        }
     }
 
     public function add_serah_terima(Request $req){
@@ -1088,6 +1139,16 @@ class TransactionController extends Controller
     }
 
     public function print(Request $req){
+        $data['type'] = "INVOICE";
+        $data['header'] = Header::find($req->transaction_id);
+        $data['rekening'] = Rekening::where('fg_aktif', 1)->first();
+        // dd($data['header']->details);
+        $data['setting'] = Config::first();
+        return view('transaction.rent_print', $data);
+    }
+
+    public function print_quotation(Request $req){
+        $data['type'] = "QUOTATION";
         $data['header'] = Header::find($req->transaction_id);
         $data['rekening'] = Rekening::where('fg_aktif', 1)->first();
         // dd($data['header']->details);

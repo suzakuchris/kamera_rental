@@ -129,7 +129,12 @@ Update Transaction
                 <table id="detail-table" class="table w-100">
                     <thead>
                         <tr>
-                            <td colspan="7"><h5>Alat yang Disewa</h5></td>
+                            <td colspan="6"><h5>Alat yang Disewa</h5></td>
+                            <td class="text-end">
+                                @if(isset($header))
+                                <a href="{{route('transaction.rent.quotation', ['transaction_id' => $header->transaction_id])}}" class="btn btn-primary align-items-center"><i class="bi bi-printer me-2"></i>Quotation</a>
+                                @endif
+                            </td>
                             <td>
                                 @if(isset($header))
                                 <a href="{{route('transaction.rent.print', ['transaction_id' => $header->transaction_id])}}" class="btn btn-primary d-flex align-items-center"><i class="bi bi-printer me-2"></i>Invoice</a>

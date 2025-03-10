@@ -2,6 +2,10 @@
     use App\Models\Config;
     use Carbon\Carbon;
     use App\Models\Transaction\Header;
+    function tas_id(){
+        return 4;
+    }
+
     function site_config(){
         $config = Config::first();
         return $config;

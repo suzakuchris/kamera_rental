@@ -143,9 +143,39 @@
                         </div>
                         <div class="col-12">
                             <div class="border p-2">
-                                <div>Tas:</div>
+                                <div>Tas:
+                                    @if(isset($serah_terima->bags) && count($serah_terima->bags) > 0) 
+                                        @foreach($serah_terima->bags as $k=>$bag) 
+                                            <div>
+                                            - ({{$bag->item->item_code}}) <b>{{$bag->item->product->brand->product_brand_name}}</b> {{$bag->item->product->product_name}}
+                                            </div>
+                                        @endforeach 
+                                    @else 
+                                    - 
+                                    @endif
+                                </div>
+                                <div class="hide-for-print">
+                                    <form method="POST" action="{{route('transaction.rent.serah_terima.print.add_bags')}}">
+                                        {{csrf_field()}}
+                                        <input type="hidden" name="header_id" value="{{$serah_terima->header_id}}">
+                                        <hr/>
+                                        Tambah Tas
+                                        <select id="tas_picker" class="form-control" name="bags[]" multiple required>
+                                            @foreach($bags as $bag)
+                                                @foreach($bag->items as $item)
+                                                    @if($item->item_status == 1)
+                                                    <option value="{{$item->item_id}}">({{$item->item_code}}) - {{$bag->brand->product_brand_name}} {{$bag->product_name}}</option>
+                                                    @endif
+                                                @endforeach
+                                            @endforeach
+                                        </select>
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-primary btn-sm mt-2"><i class="bi bi-save me-2"></i>Save</button>
+                                        </div>
+                                    </form>
+                                </div>
                                 <hr/>
-                                <div>Note:</div>
+                                <div>Note:<p class="mt-1">{{$serah_terima->header_notes}}</p></div>
                             </div>
                         </div>
                         <div class="col-4">
@@ -187,6 +217,8 @@
     $(document).ready(function(){
         $("body").removeClass("dark");
         $("html").removeAttr('data-bs-theme');
+
+        $("#tas_picker").select2();
     });
 </script>
 @endsection

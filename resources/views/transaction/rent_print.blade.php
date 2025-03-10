@@ -39,7 +39,7 @@
                             <div><i class="bi bi-phone me-2"></i>0812-2555-5136 dan 0856-4004-4255</div>
                         </div>
                         <div class="col-5 d-flex justify-content-end align-items-center">
-                            <h5><b><i>INVOICE</i></b></h5>
+                            <h5><b><i>{{$type}}</i></b></h5>
                         </div>
                         <div class="col-12">
                             <hr/>

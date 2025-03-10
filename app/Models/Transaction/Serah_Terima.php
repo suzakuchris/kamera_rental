@@ -23,4 +23,8 @@ class Serah_Terima extends Model
     public function transaction(){
         return $this->hasOne(Header::class, 'transaction_id', 'header_transaction_id');
     }
+
+    public function bags(){
+        return $this->hasMany(Serah_Terima_Bags::class, 'header_id', 'header_id');
+    }
 }
