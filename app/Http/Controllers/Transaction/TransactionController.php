@@ -168,12 +168,17 @@ class TransactionController extends Controller
             $errorArr = json_decode($validator->errors());//$validator->messages();
             $errorStr ='';
 
-            foreach ($errorArr as $item) {
-                $errorStr .= '<div>'.$item[0].'</div>';
+            foreach ($errorArr as $k=>$item) {
+                if($k != 0){
+                    $errorStr .= ", ".$item[0];
+                }else{
+                    $errorStr .= $item[0];
+                }
             }
 
-            http_response_code(405);
-            exit(json_encode(['Message' => $errorStr]));
+            return redirect()->back()->withInput()->with(['error_message' => $errorStr]);
+            // http_response_code(405);
+            // exit(json_encode(['Message' => $errorStr]));
         }
 
         //cek date
@@ -275,6 +280,10 @@ class TransactionController extends Controller
                         foreach($_details as $_det){
                             $product_id = $_det['product_id'];
                             $item_id = $_det['product_item'];
+
+                            if(!isset($item_id)){
+                                throw new Exception("Data item harus dipilih");
+                            }
 
                             $product = Product::find($product_id);
                             $item = Items::find($item_id);
@@ -419,8 +428,9 @@ class TransactionController extends Controller
             return redirect()->route('transaction.rent.view', ['transaction_id' => $header->transaction_id])->with(['success_message' => 'Transaksi berhasil dibuat']);
         }catch(Exception $e){
             DB::rollback();
-            http_response_code(405);
-            exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
+            return redirect()->back()->withInput()->with(['error_message' => 'Terjadi kesalahan, '.$e->getMessage()]);
+            // http_response_code(405);
+            // exit(json_encode(['Message' => "Terjadi kesalahan, ".$e->getMessage()]));
         }
     }
 
