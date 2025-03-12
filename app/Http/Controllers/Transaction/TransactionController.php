@@ -225,6 +225,10 @@ class TransactionController extends Controller
                         $price = $days_rent * $harga;
                         $total_price += $price;
 
+                        if(!isset($item_id)){
+                            throw new Exception("Item tidak boleh tidak diisi");
+                        }
+
                         $product = Product::find($product_id);
                         $item = Items::find($item_id);
                         $item->item_status = 0;
