@@ -3,7 +3,7 @@
     use Carbon\Carbon;
     use App\Models\Transaction\Header;
     function tas_id(){
-        return 4;
+        return 28;
     }
 
     function site_config(){
