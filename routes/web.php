@@ -187,7 +187,7 @@ Route::group(['middleware' => 'auth'], function(){
             Route::get('/view/{transaction_id?}', [TransactionController::class, 'view'])->name('transaction.rent.view');
             //print = ngelock
             Route::get('/print/{transaction_id?}', [TransactionController::class, 'print'])->name('transaction.rent.print');
-            Route::get('/quotation/{transaction_id?}', [TransactionController::class, 'quotation'])->name('transaction.rent.quotation');
+            Route::get('/quotation/{transaction_id?}', [TransactionController::class, 'print_quotation'])->name('transaction.rent.quotation');
 
             Route::post('/upsert', [TransactionController::class, 'upsert'])->name('transaction.rent.upsert');
             Route::post('/delete', [TransactionController::class, 'delete'])->name('transaction.rent.delete');
